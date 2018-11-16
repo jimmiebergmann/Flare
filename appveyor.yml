@@ -1,0 +1,28 @@
+os: Visual Studio 2015
+
+environment:
+  VULKAN_SDK: c:\VulkanSDK\1.1.85.0
+
+
+install:
+    -ps: curl --silent --show-error --output VulkanSDK.exe https://vulkan.lunarg.com/sdk/home#sdk/downloadConfirm/1.1.85.0/windows/VulkanSDK-1.1.85.0-Installer.exe
+    -ps: .\VulkanSDK.exe /S
+
+environment:
+  matrix:
+    - platform: x86
+      configuration: Static Debug
+    - platform: x86
+      configuration: Static Release
+    - platform: x64
+      configuration: Dynamic Debug
+    - platform: x64
+      configuration: Dynamic Release
+
+matrix:
+  fast_finish: false
+
+build:
+  parallel: true
+  project: "build\visual studio\flare.sln"
+verbosity: minimal
