@@ -23,14 +23,76 @@
 *
 */
 
-#ifndef FLARE_HEADERS_HPP
-#define FLARE_HEADERS_HPP
-
-#include "build.hpp"
+#include "flare/graphics/vulkan/vulkanRenderer.hpp"
 
 #if defined(FLARE_VULKAN)
-#include "flare/graphics/vulkan/vulkanRenderer.hpp"
+
 #include "flare/graphics/vulkan/vulkanTexture.hpp"
+
+namespace Flare
+{
+
+    VulkanRenderer::VulkanRenderer()
+    {
+    }
+
+    VulkanRenderer::~VulkanRenderer()
+    {
+    }
+
+#if defined(FLARE_PLATFORM_WINDOWS)
+
+    void VulkanRenderer::setHwnd(const HWND hwnd)
+    {
+    }
+
+    HWND VulkanRenderer::getHwnd() const
+    {
+        return 0;
+    }
+
+    void VulkanRenderer::setHinstance(const HINSTANCE hinstance)
+    {
+    }
+
+    HINSTANCE VulkanRenderer::getHinstance() const
+    {
+        return 0;
+    }
+
 #endif
+
+    void VulkanRenderer::setMaxFrameRate(const float fps)
+    {
+    }
+
+    void VulkanRenderer::setUnlimitedFrameRate()
+    {
+    }
+    
+    float VulkanRenderer::getMaxFrameRate() const
+    {
+        return 0.0f;
+    }
+
+    void VulkanRenderer::load()
+    {
+    }
+
+    void VulkanRenderer::update()
+    {
+    }
+
+    void VulkanRenderer::render()
+    {
+    }
+
+    Texture * VulkanRenderer::createTexture()
+    {
+        Texture * texture = new VulkanTexture();
+        return texture;
+    }
+
+}
 
 #endif

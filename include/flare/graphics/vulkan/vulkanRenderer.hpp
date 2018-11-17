@@ -23,14 +23,51 @@
 *
 */
 
-#ifndef FLARE_HEADERS_HPP
-#define FLARE_HEADERS_HPP
+#ifndef FLARE_GRAPHICS_RENDERERS_VULKAN_RENDERER_HPP
+#define FLARE_GRAPHICS_RENDERERS_VULKAN_RENDERER_HPP
 
-#include "build.hpp"
+#include "flare/graphics/renderer.hpp"
 
 #if defined(FLARE_VULKAN)
-#include "flare/graphics/vulkan/vulkanRenderer.hpp"
-#include "flare/graphics/vulkan/vulkanTexture.hpp"
+
+#include "vulkan/vulkan.h"
+
+namespace Flare
+{
+
+    class FLARE_API VulkanRenderer : public Renderer
+    {
+
+    public:
+
+        VulkanRenderer();
+        ~VulkanRenderer();
+
+#if defined(FLARE_PLATFORM_WINDOWS)
+        virtual void setHwnd(const HWND hwnd);
+        virtual HWND getHwnd() const;
+        virtual void setHinstance(const HINSTANCE hinstance);
+        virtual HINSTANCE getHinstance() const;
+#endif
+
+        virtual void setMaxFrameRate(const float fps);
+        virtual void setUnlimitedFrameRate();
+        virtual float getMaxFrameRate() const;
+
+        virtual void load();
+        virtual void update();
+        virtual void render();
+
+        virtual Texture * createTexture();
+
+    private:
+
+        VulkanRenderer(const VulkanRenderer &) = delete;
+
+    };
+
+}
+
 #endif
 
 #endif

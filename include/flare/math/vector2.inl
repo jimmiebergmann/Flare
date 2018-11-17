@@ -23,14 +23,17 @@
 *
 */
 
-#ifndef FLARE_HEADERS_HPP
-#define FLARE_HEADERS_HPP
+namespace Flare
+{
 
-#include "build.hpp"
+    template<typename T>
+    Vector2<T>::Vector2()
+    { }
 
-#if defined(FLARE_VULKAN)
-#include "flare/graphics/vulkan/vulkanRenderer.hpp"
-#include "flare/graphics/vulkan/vulkanTexture.hpp"
-#endif
+    template<typename T>
+    Vector2<T>::Vector2(const T p_x, const T p_y) :
+        x(p_x),
+        y(p_y)
+    { }
 
-#endif
+}

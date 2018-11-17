@@ -28,15 +28,35 @@
 
 #include "flare/build.hpp"
 
-
 namespace Flare
 {
+
+    class Texture;
 
     class FLARE_API Renderer
     {
 
+    public:
+
         Renderer();
         virtual ~Renderer();
+
+    #if defined(FLARE_PLATFORM_WINDOWS)
+        virtual void setHwnd(const HWND hwnd) = 0;
+        virtual HWND getHwnd() const = 0;
+        virtual void setHinstance(const HINSTANCE hinstance) = 0;
+        virtual HINSTANCE getHinstance() const = 0;
+    #endif
+
+        virtual void setMaxFrameRate(const float fps) = 0;
+        virtual void setUnlimitedFrameRate() = 0;
+        virtual float getMaxFrameRate() const = 0;
+
+        virtual void load() = 0;
+        virtual void update() = 0;
+        virtual void render() = 0;
+
+        virtual Texture * createTexture() = 0;
 
     };
 

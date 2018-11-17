@@ -30,13 +30,9 @@ namespace Flare
 {
 
     Renderer::Renderer()
-    {
-
-    }
+    { }
 
     Renderer::~Renderer()
-    {
-
-    }
+    { }
 
 }

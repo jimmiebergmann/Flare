@@ -23,14 +23,39 @@
 *
 */
 
-#ifndef FLARE_HEADERS_HPP
-#define FLARE_HEADERS_HPP
+#ifndef FLARE_GRAPHICS_VULKAN_TEXTURE_HPP
+#define FLARE_GRAPHICS_VULKAN_TEXTURE_HPP
 
-#include "build.hpp"
+#include "flare/graphics/texture.hpp"
 
 #if defined(FLARE_VULKAN)
-#include "flare/graphics/vulkan/vulkanRenderer.hpp"
-#include "flare/graphics/vulkan/vulkanTexture.hpp"
+
+namespace Flare
+{
+
+    class VulkanRenderer;
+
+    class FLARE_API VulkanTexture : public Texture
+    {
+
+    public:
+
+        virtual Vector2<uint32_t> getSize() const;
+
+    private:
+
+        VulkanTexture();
+        ~VulkanTexture();
+        VulkanTexture(const VulkanTexture &) = delete;
+
+        Vector2<uint32_t> m_size;
+
+        friend class VulkanRenderer;
+
+    };
+
+}
+
 #endif
 
 #endif

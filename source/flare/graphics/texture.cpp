@@ -23,14 +23,16 @@
 *
 */
 
-#ifndef FLARE_HEADERS_HPP
-#define FLARE_HEADERS_HPP
+#include "flare/graphics/texture.hpp"
 
-#include "build.hpp"
 
-#if defined(FLARE_VULKAN)
-#include "flare/graphics/vulkan/vulkanRenderer.hpp"
-#include "flare/graphics/vulkan/vulkanTexture.hpp"
-#endif
+namespace Flare
+{
 
-#endif
+    Texture::Texture()
+    { }
+
+    Texture::~Texture()
+    { }
+
+}

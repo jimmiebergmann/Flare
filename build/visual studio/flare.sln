@@ -9,6 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5BA50A96
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "flare", "flare.vcxproj", "{F6BDD21A-70B6-46FF-A778-E3310D5F7011}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "defaultPipeline", "examples\defaultPipeline.vcxproj", "{A0E9FE54-93FD-4E13-A008-EC6C8714AB8D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F6BDD21A-70B6-46FF-A778-E3310D5F7011} = {F6BDD21A-70B6-46FF-A778-E3310D5F7011}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Dynamic Debug|x64 = Dynamic Debug|x64
@@ -37,9 +42,28 @@ Global
 		{F6BDD21A-70B6-46FF-A778-E3310D5F7011}.Static Release|x64.Build.0 = Static Release|x64
 		{F6BDD21A-70B6-46FF-A778-E3310D5F7011}.Static Release|x86.ActiveCfg = Static Release|Win32
 		{F6BDD21A-70B6-46FF-A778-E3310D5F7011}.Static Release|x86.Build.0 = Static Release|Win32
+		{A0E9FE54-93FD-4E13-A008-EC6C8714AB8D}.Dynamic Debug|x64.ActiveCfg = Dynamic Debug|x64
+		{A0E9FE54-93FD-4E13-A008-EC6C8714AB8D}.Dynamic Debug|x64.Build.0 = Dynamic Debug|x64
+		{A0E9FE54-93FD-4E13-A008-EC6C8714AB8D}.Dynamic Debug|x86.ActiveCfg = Dynamic Debug|Win32
+		{A0E9FE54-93FD-4E13-A008-EC6C8714AB8D}.Dynamic Debug|x86.Build.0 = Dynamic Debug|Win32
+		{A0E9FE54-93FD-4E13-A008-EC6C8714AB8D}.Dynamic Release|x64.ActiveCfg = Dynamic Release|x64
+		{A0E9FE54-93FD-4E13-A008-EC6C8714AB8D}.Dynamic Release|x64.Build.0 = Dynamic Release|x64
+		{A0E9FE54-93FD-4E13-A008-EC6C8714AB8D}.Dynamic Release|x86.ActiveCfg = Dynamic Release|Win32
+		{A0E9FE54-93FD-4E13-A008-EC6C8714AB8D}.Dynamic Release|x86.Build.0 = Dynamic Release|Win32
+		{A0E9FE54-93FD-4E13-A008-EC6C8714AB8D}.Static Debug|x64.ActiveCfg = Static Debug|x64
+		{A0E9FE54-93FD-4E13-A008-EC6C8714AB8D}.Static Debug|x64.Build.0 = Static Debug|x64
+		{A0E9FE54-93FD-4E13-A008-EC6C8714AB8D}.Static Debug|x86.ActiveCfg = Static Debug|Win32
+		{A0E9FE54-93FD-4E13-A008-EC6C8714AB8D}.Static Debug|x86.Build.0 = Static Debug|Win32
+		{A0E9FE54-93FD-4E13-A008-EC6C8714AB8D}.Static Release|x64.ActiveCfg = Static Release|x64
+		{A0E9FE54-93FD-4E13-A008-EC6C8714AB8D}.Static Release|x64.Build.0 = Static Release|x64
+		{A0E9FE54-93FD-4E13-A008-EC6C8714AB8D}.Static Release|x86.ActiveCfg = Static Release|Win32
+		{A0E9FE54-93FD-4E13-A008-EC6C8714AB8D}.Static Release|x86.Build.0 = Static Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A0E9FE54-93FD-4E13-A008-EC6C8714AB8D} = {5DF73095-6FDA-4655-B5FE-11C7D85A65F6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {075CB322-5AEB-4347-A403-BAF5D823D316}

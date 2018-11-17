@@ -23,14 +23,25 @@
 *
 */
 
-#ifndef FLARE_HEADERS_HPP
-#define FLARE_HEADERS_HPP
-
-#include "build.hpp"
+#include "flare/graphics/vulkan/vulkanTexture.hpp"
 
 #if defined(FLARE_VULKAN)
-#include "flare/graphics/vulkan/vulkanRenderer.hpp"
-#include "flare/graphics/vulkan/vulkanTexture.hpp"
-#endif
+
+namespace Flare
+{
+
+    Vector2<uint32_t> VulkanTexture::getSize() const
+    {
+        return m_size;
+    }
+
+    VulkanTexture::VulkanTexture() :
+        m_size(0, 0)
+    { }
+
+    VulkanTexture::~VulkanTexture()
+    { }
+
+}
 
 #endif

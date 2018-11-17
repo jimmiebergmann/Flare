@@ -26,9 +26,12 @@
 #ifndef FLARE_BUILD_HPP
 #define FLARE_BUILD_HPP
 
+#include <stdint.h>
+
 // Platform
 #if defined( _WIN32 ) || defined( __WIN32__ ) || defined( _WIN64 ) || defined( __WIN64__ )
     #define FLARE_PLATFORM_WINDOWS
+    #include "platform\windowsHeaders.hpp"
 #elif defined( linux ) || defined( __linux )
     #define FLARE_PLATFORM_LINUX
 #else
@@ -45,9 +48,9 @@
 
 #if !defined(FLARE_STATIC_LIB)
     // Turn off microsoft vsc warning
-    //#ifdef _MSC_VER
-    //#pragma warning(disable : 4251)
-    //#endif
+    #ifdef _MSC_VER
+        #pragma warning(disable : 4251)
+    #endif
 
     // Define as export or import, if FLARE_EXPORTS is defined.
     #if defined(FLARE_PLATFORM_WINDOWS)
@@ -63,5 +66,7 @@
 #else
     #define FLARE_API
 #endif
+
+#define FLARE_VULKAN
 
 #endif

@@ -23,14 +23,17 @@
 *
 */
 
-#ifndef FLARE_HEADERS_HPP
-#define FLARE_HEADERS_HPP
+#include <iostream>
+#include "flare/flare.hpp"
 
-#include "build.hpp"
+int main(int argc, char ** argv)
+{
+    std::cout << "Running Default Pipeline example." << std::endl;
+   
+    Flare::Renderer * renderer = new Flare::VulkanRenderer();
 
-#if defined(FLARE_VULKAN)
-#include "flare/graphics/vulkan/vulkanRenderer.hpp"
-#include "flare/graphics/vulkan/vulkanTexture.hpp"
-#endif
+    renderer->load();
 
-#endif
+    delete renderer;
+    return 0;
+}

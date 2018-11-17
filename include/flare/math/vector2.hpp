@@ -23,10 +23,30 @@
 *
 */
 
-#include <iostream>
+#ifndef FLARE_MATH_VECTOR2_HPP
+#define FLARE_MATH_VECTOR2_HPP
 
-int main(int argc, char ** argv)
+#include "flare/build.hpp"
+
+namespace Flare
 {
-    std::cout << "Running Default Pipeline example." << std::endl;
-    return 0;
+
+    template<typename T>
+    class Vector2
+    {
+
+    public:
+
+        Vector2();
+        Vector2(const T x, const T y);
+        
+        T x;
+        T y;
+
+    };
+
 }
+
+#include "flare/math/vector2.inl"
+
+#endif
