@@ -1,4 +1,4 @@
-os: Visual Studio 2015
+os: Visual Studio 2017
 
 install:
     - cmd: echo Downloading Vulkan SDK.
