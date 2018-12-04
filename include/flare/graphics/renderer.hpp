@@ -27,11 +27,57 @@
 #define FLARE_GRAPHICS_RENDERER_HPP
 
 #include "flare/build.hpp"
+#include "flare/window/window.hpp"
+#include "flare/math/vector.hpp"
+#include <string>
+#include <vector>
+#include <optional>
 
 namespace Flare
 {
 
     class Texture;
+
+    class FLARE_API RendererSettings
+    {
+
+    public:
+
+        RendererSettings(const int argc = 0, const char ** argv = nullptr);
+
+        void setArguments(int argv, char ** argc);
+        void setArguments(const std::vector<std::string> & argumnets);
+        const std::vector<std::string> getArguments() const;
+
+        void setMaxFrameRate(const float fps);
+        void setUnlimitedFrameRate();
+        float getMaxFrameRate() const;
+
+        void setWindow(Window * window);
+        Window * getWindow() const;
+
+    #if defined(FLARE_PLATFORM_WINDOWS)
+        void setHWnd(const HWND hWnd);
+        HWND getHWnd() const;
+        void setHInstance(const HINSTANCE hInstance);
+        HINSTANCE getHInstance() const;
+    #endif
+
+    private:
+
+        float m_frameRate;
+        std::vector<std::string> m_arguments;
+
+        // Window configurations.
+        Window * m_pWindow;
+
+    #if defined(FLARE_PLATFORM_WINDOWS)
+        HWND m_hWnd;
+        HINSTANCE m_hInstance;
+    #endif
+
+
+    };
 
     class FLARE_API Renderer
     {
@@ -41,22 +87,20 @@ namespace Flare
         Renderer();
         virtual ~Renderer();
 
-    #if defined(FLARE_PLATFORM_WINDOWS)
-        virtual void setHwnd(const HWND hwnd) = 0;
-        virtual HWND getHwnd() const = 0;
-        virtual void setHinstance(const HINSTANCE hinstance) = 0;
-        virtual HINSTANCE getHinstance() const = 0;
-    #endif
-
         virtual void setMaxFrameRate(const float fps) = 0;
         virtual void setUnlimitedFrameRate() = 0;
         virtual float getMaxFrameRate() const = 0;
 
-        virtual void load() = 0;
+        virtual void load(const RendererSettings & settings) = 0;
         virtual void update() = 0;
         virtual void render() = 0;
+        virtual void resize(const Vector2ui32 & size) = 0;
 
         virtual Texture * createTexture() = 0;
+
+    private:
+
+        Renderer(const Renderer &) = delete;
 
     };
 

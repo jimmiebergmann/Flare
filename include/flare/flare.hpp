@@ -33,4 +33,9 @@
 #include "flare/graphics/vulkan/vulkanTexture.hpp"
 #endif
 
+#include "flare/window/window.hpp"
+#include "flare/math/vector.hpp"
+#include "flare/math/matrix.hpp"
+
+
 #endif

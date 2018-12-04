@@ -31,6 +31,7 @@
 #if defined(FLARE_VULKAN)
 
 #include "vulkan/vulkan.h"
+#include <atomic>
 
 namespace Flare
 {
@@ -43,27 +44,21 @@ namespace Flare
         VulkanRenderer();
         ~VulkanRenderer();
 
-#if defined(FLARE_PLATFORM_WINDOWS)
-        virtual void setHwnd(const HWND hwnd);
-        virtual HWND getHwnd() const;
-        virtual void setHinstance(const HINSTANCE hinstance);
-        virtual HINSTANCE getHinstance() const;
-#endif
-
         virtual void setMaxFrameRate(const float fps);
         virtual void setUnlimitedFrameRate();
         virtual float getMaxFrameRate() const;
 
-        virtual void load();
+        virtual void load(const RendererSettings & settings);
         virtual void update();
         virtual void render();
+        virtual void resize(const Vector2ui32 & size);
 
         virtual Texture * createTexture();
 
     private:
 
         VulkanRenderer(const VulkanRenderer &) = delete;
-
+        std::atomic<float> m_maxFrameRate;
     };
 
 }

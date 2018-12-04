@@ -27,7 +27,7 @@
 #define FLARE_GRAPHICS_TEXTURE_HPP
 
 #include "flare/build.hpp"
-#include "flare/math/vector2.hpp"
+#include "flare/math/vector.hpp"
 
 namespace Flare
 {
@@ -40,7 +40,7 @@ namespace Flare
         Texture();
         virtual ~Texture();
 
-        virtual Vector2<uint32_t> getSize() const = 0;
+        virtual Vector2ui32 getSize() const = 0;
 
     };
 

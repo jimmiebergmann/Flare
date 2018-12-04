@@ -25,7 +25,6 @@
 
 #include "flare/graphics/texture.hpp"
 
-
 namespace Flare
 {
 

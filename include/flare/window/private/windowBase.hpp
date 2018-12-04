@@ -23,30 +23,43 @@
 *
 */
 
-#include <iostream>
-#include "flare/flare.hpp"
+#ifndef FLARE_PRIVATE_WINDOW_BASE_HPP
+#define FLARE_PRIVATE_WINDOW_BASE_HPP
 
-int main(int argc, char ** argv)
+#include "flare/build.hpp"
+#include "flare/math/vector.hpp"
+#include <string>
+
+namespace Flare
 {
-    Flare::Window window({ 800, 600 }, "Default pipeline example.");
 
-    Flare::RendererSettings settings;
-    settings.setArguments(argc, argv);
-    settings.setWindow(&window);
-
-    Flare::Renderer * renderer = new Flare::VulkanRenderer();
-    renderer->load(settings);
-
-    window.show();
-    while (window.isOpen())
+    namespace Priv
     {
-        window.update();
 
-        renderer->update();
-        renderer->render();
+        class FLARE_API WindowBase
+        {
+
+        public:
+
+            virtual ~WindowBase();
+
+            virtual void open(const Vector2ui32 & size, const std::string & title) = 0;
+            virtual void close() = 0;
+            virtual void update() = 0;
+            virtual void show() = 0;
+            virtual void hide() = 0;
+            virtual bool isOpen() = 0;
+
+        #if defined(FLARE_PLATFORM_WINDOWS)
+            virtual HWND getHWnd() const = 0;
+            virtual  HINSTANCE getHInstance() const = 0;
+        #endif
+
+        };
+
+
     }
 
-    delete renderer;
-
-    return EXIT_SUCCESS;
 }
+
+#endif

@@ -23,30 +23,56 @@
 *
 */
 
-#include <iostream>
-#include "flare/flare.hpp"
+#ifndef FLARE_PRIVATE_WIN32_WINDOW_HPP
+#define FLARE_PRIVATE_WIN32_WINDOW_HPP
 
-int main(int argc, char ** argv)
+#include "flare/build.hpp"
+
+#if defined(FLARE_PLATFORM_WINDOWS)
+
+#include "windowBase.hpp"
+
+namespace Flare
 {
-    Flare::Window window({ 800, 600 }, "Default pipeline example.");
 
-    Flare::RendererSettings settings;
-    settings.setArguments(argc, argv);
-    settings.setWindow(&window);
-
-    Flare::Renderer * renderer = new Flare::VulkanRenderer();
-    renderer->load(settings);
-
-    window.show();
-    while (window.isOpen())
+    namespace Priv
     {
-        window.update();
 
-        renderer->update();
-        renderer->render();
+        class FLARE_API Win32Window : public WindowBase
+        {
+
+        public:
+
+            Win32Window();
+            Win32Window(const Vector2ui32 & size, const std::string & title);
+            ~Win32Window();
+
+            virtual void open(const Vector2ui32 & size, const std::string & title);
+            virtual void close();
+            virtual void update();
+            virtual void show();
+            virtual void hide();
+            virtual bool isOpen();
+
+            virtual HWND getHWnd() const;
+            virtual HINSTANCE getHInstance() const;
+
+        private:
+
+            HWND m_hWnd;
+            HINSTANCE m_hInstance;
+            Vector2ui32 m_size;
+            std::string m_title;
+            bool m_open;
+            
+
+        };
+
+
     }
 
-    delete renderer;
-
-    return EXIT_SUCCESS;
 }
+
+#endif
+
+#endif

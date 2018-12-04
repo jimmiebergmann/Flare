@@ -23,17 +23,22 @@
 *
 */
 
+#ifndef FLARE_GRAPHICS_PIPELINE_HPP
+#define FLARE_GRAPHICS_PIPELINE_HPP
+
+#include "flare/build.hpp"
+
 namespace Flare
 {
 
-    template<typename T>
-    Vector2<T>::Vector2()
-    { }
+    class FLARE_API Pipeline
+    {
 
-    template<typename T>
-    Vector2<T>::Vector2(const T p_x, const T p_y) :
-        x(p_x),
-        y(p_y)
-    { }
+    public:
+
+
+    };
 
 }
+
+#endif

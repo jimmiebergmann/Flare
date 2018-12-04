@@ -23,30 +23,22 @@
 *
 */
 
-#ifndef FLARE_MATH_VECTOR2_HPP
-#define FLARE_MATH_VECTOR2_HPP
+#ifndef FLARE_WINDOW_HPP
+#define FLARE_WINDOW_HPP
 
 #include "flare/build.hpp"
 
+#if defined(FLARE_PLATFORM_WINDOWS)
+#include "private/win32Window.hpp"
+#endif
+
 namespace Flare
 {
-
-    template<typename T>
-    class Vector2
-    {
-
-    public:
-
-        Vector2();
-        Vector2(const T x, const T y);
-        
-        T x;
-        T y;
-
-    };
+    
+#if defined(FLARE_PLATFORM_WINDOWS)
+    typedef Priv::Win32Window Window;
+#endif
 
 }
-
-#include "flare/math/vector2.inl"
 
 #endif

@@ -5,9 +5,6 @@
     <ClInclude Include="..\..\include\flare\graphics\renderer.hpp">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\flare\platform\windowsHeaders.hpp">
-      <Filter>platform</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\flare\graphics\vulkan\vulkanRenderer.hpp">
       <Filter>graphics\vulkan</Filter>
     </ClInclude>
@@ -18,8 +15,26 @@
       <Filter>graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\flare\build.hpp" />
-    <ClInclude Include="..\..\include\flare\math\vector2.hpp">
+    <ClInclude Include="..\..\include\flare\graphics\pipeline.hpp">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\flare\math\vector.hpp">
       <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\flare\math\matrix.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\flare\window\window.hpp">
+      <Filter>window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\flare\platform\win32Headers.hpp">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\flare\window\private\win32Window.hpp">
+      <Filter>window\private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\flare\window\private\windowBase.hpp">
+      <Filter>window\private</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -35,6 +50,12 @@
     <Filter Include="math">
       <UniqueIdentifier>{a7d4fb57-ec2c-4bd8-8b2e-30b8c5616778}</UniqueIdentifier>
     </Filter>
+    <Filter Include="window">
+      <UniqueIdentifier>{1abed360-4e07-46cd-bf97-5e6a37373f66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="window\private">
+      <UniqueIdentifier>{513dafcc-3a52-41fc-8e2e-ec96ae7b883b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\flare\graphics\renderer.cpp">
@@ -49,9 +70,21 @@
     <ClCompile Include="..\..\source\flare\graphics\texture.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\flare\graphics\pipeline.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\flare\window\private\win32Window.cpp">
+      <Filter>window\private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\flare\window\private\windowBase.cpp">
+      <Filter>window\private</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\include\flare\math\vector2.inl">
+    <None Include="..\..\include\flare\math\vector.inl">
+      <Filter>math</Filter>
+    </None>
+    <None Include="..\..\include\flare\math\matrix.inl">
       <Filter>math</Filter>
     </None>
   </ItemGroup>

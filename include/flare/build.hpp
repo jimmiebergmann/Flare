@@ -31,7 +31,7 @@
 // Platform
 #if defined( _WIN32 ) || defined( __WIN32__ ) || defined( _WIN64 ) || defined( __WIN64__ )
     #define FLARE_PLATFORM_WINDOWS
-    #include "platform\windowsHeaders.hpp"
+    #include "platform\win32Headers.hpp"
 #elif defined( linux ) || defined( __linux )
     #define FLARE_PLATFORM_LINUX
 #else

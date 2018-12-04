@@ -40,43 +40,50 @@ namespace Flare
     {
     }
 
-#if defined(FLARE_PLATFORM_WINDOWS)
-
-    void VulkanRenderer::setHwnd(const HWND hwnd)
-    {
-    }
-
-    HWND VulkanRenderer::getHwnd() const
-    {
-        return 0;
-    }
-
-    void VulkanRenderer::setHinstance(const HINSTANCE hinstance)
-    {
-    }
-
-    HINSTANCE VulkanRenderer::getHinstance() const
-    {
-        return 0;
-    }
-
-#endif
-
     void VulkanRenderer::setMaxFrameRate(const float fps)
     {
+        m_maxFrameRate = fps;
     }
 
     void VulkanRenderer::setUnlimitedFrameRate()
     {
-    }
-    
-    float VulkanRenderer::getMaxFrameRate() const
-    {
-        return 0.0f;
+        m_maxFrameRate = 0.0f;
     }
 
-    void VulkanRenderer::load()
+    float VulkanRenderer::getMaxFrameRate() const
     {
+        return m_maxFrameRate;
+    }
+
+    void VulkanRenderer::load(const RendererSettings & settings)
+    {
+
+        #if defined(FLARE_PLATFORM_WINDOWS)
+            Window * pWindow = settings.getWindow();
+            HWND hWnd = settings.getHWnd();
+            if (hWnd == nullptr)
+            {
+                if (pWindow)
+                {
+                    hWnd = pWindow->getHWnd();
+                }
+            }
+
+            HINSTANCE hInstance = settings.getHInstance();
+            if (hInstance == nullptr)
+            {
+                if (pWindow)
+                {
+                    hInstance = pWindow->getHInstance();
+                }
+            }
+
+            if (hWnd && hInstance)
+            {
+
+            }
+        #endif
+
     }
 
     void VulkanRenderer::update()
@@ -85,6 +92,11 @@ namespace Flare
 
     void VulkanRenderer::render()
     {
+    }
+
+    void VulkanRenderer::resize(const Vector2ui32 & size)
+    {
+
     }
 
     Texture * VulkanRenderer::createTexture()

@@ -25,14 +25,98 @@
 
 #include "flare/graphics/renderer.hpp"
 
-
 namespace Flare
 {
 
+    // Renderer settings.
+
+
+    RendererSettings::RendererSettings(const int argc, const char ** argv) :
+        m_frameRate(0),
+        m_pWindow(nullptr)
+#if defined(FLARE_PLATFORM_WINDOWS)
+        ,
+        m_hWnd(nullptr),
+        m_hInstance(nullptr)
+#endif
+    { }
+
+    void RendererSettings::setArguments(int argv, char ** argc)
+    {
+        // Parse arguments.
+        // ...
+        for (int i = 1; i < argv; i++)
+        {
+            m_arguments.push_back(argc[i]);
+        }
+    }
+
+    void RendererSettings::setArguments(const std::vector<std::string> & argumnets)
+    {
+        m_arguments = argumnets;
+    }
+
+    const std::vector<std::string> RendererSettings::getArguments() const
+    {
+        return m_arguments;
+    }
+
+    void RendererSettings::setMaxFrameRate(const float fps)
+    {
+        m_frameRate = fps;
+    }
+
+    void RendererSettings::setUnlimitedFrameRate()
+    {
+        m_frameRate = 0.0f;
+    }
+
+    float RendererSettings::getMaxFrameRate() const
+    {
+        return m_frameRate;
+    }
+
+    void RendererSettings::setWindow(Window * window)
+    {
+        m_pWindow = window;
+    }
+
+    Window * RendererSettings::getWindow() const
+    {
+        return m_pWindow;
+    }
+
+#if defined(FLARE_PLATFORM_WINDOWS)
+  
+    void RendererSettings::setHWnd(const HWND hWnd)
+    {
+        m_hWnd = hWnd;
+    }
+
+    HWND RendererSettings::getHWnd() const
+    {
+        return m_hWnd;
+    }
+
+    void RendererSettings::setHInstance(const HINSTANCE hInstance)
+    {
+        m_hInstance = hInstance;
+    }
+
+    HINSTANCE RendererSettings::getHInstance() const
+    {
+        return m_hInstance;
+    }
+
+#endif
+
+    // Renderer.
     Renderer::Renderer()
     { }
 
     Renderer::~Renderer()
     { }
+
+
 
 }

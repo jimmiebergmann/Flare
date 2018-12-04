@@ -40,7 +40,7 @@ namespace Flare
 
     public:
 
-        virtual Vector2<uint32_t> getSize() const;
+        virtual Vector2ui32 getSize() const;
 
     private:
 
@@ -48,7 +48,7 @@ namespace Flare
         ~VulkanTexture();
         VulkanTexture(const VulkanTexture &) = delete;
 
-        Vector2<uint32_t> m_size;
+        Vector2ui32 m_size;
 
         friend class VulkanRenderer;
 

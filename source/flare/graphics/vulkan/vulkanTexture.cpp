@@ -30,7 +30,7 @@
 namespace Flare
 {
 
-    Vector2<uint32_t> VulkanTexture::getSize() const
+    Vector2ui32 VulkanTexture::getSize() const
     {
         return m_size;
     }

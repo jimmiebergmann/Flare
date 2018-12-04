@@ -23,30 +23,9 @@
 *
 */
 
-#include <iostream>
-#include "flare/flare.hpp"
+#include "flare/graphics/pipeline.hpp"
 
-int main(int argc, char ** argv)
+namespace Flare
 {
-    Flare::Window window({ 800, 600 }, "Default pipeline example.");
 
-    Flare::RendererSettings settings;
-    settings.setArguments(argc, argv);
-    settings.setWindow(&window);
-
-    Flare::Renderer * renderer = new Flare::VulkanRenderer();
-    renderer->load(settings);
-
-    window.show();
-    while (window.isOpen())
-    {
-        window.update();
-
-        renderer->update();
-        renderer->render();
-    }
-
-    delete renderer;
-
-    return EXIT_SUCCESS;
 }
