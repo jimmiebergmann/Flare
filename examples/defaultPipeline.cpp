@@ -41,7 +41,6 @@ int main(int argc, char ** argv)
     while (window.isOpen())
     {
         window.update();
-
         renderer->update();
         renderer->render();
     }

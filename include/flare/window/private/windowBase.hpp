@@ -41,6 +41,12 @@ namespace Flare
 
         public:
 
+            enum class WindowMode
+            {
+                Windowed,
+                Fullscreen
+            };
+
             virtual ~WindowBase();
 
             virtual void open(const Vector2ui32 & size, const std::string & title) = 0;
@@ -48,7 +54,12 @@ namespace Flare
             virtual void update() = 0;
             virtual void show() = 0;
             virtual void hide() = 0;
-            virtual bool isOpen() = 0;
+            virtual void setWindowMode(const WindowMode mode) = 0;
+            virtual void toggleWindowMode() = 0;
+            virtual bool isOpen() const = 0;
+            virtual bool isVisible() const = 0;
+            virtual bool isFullscreen() const = 0;
+            virtual WindowMode getWindowMode() const = 0;
 
         #if defined(FLARE_PLATFORM_WINDOWS)
             virtual HWND getHWnd() const = 0;

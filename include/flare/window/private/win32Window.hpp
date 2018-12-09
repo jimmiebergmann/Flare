@@ -52,18 +52,37 @@ namespace Flare
             virtual void update();
             virtual void show();
             virtual void hide();
-            virtual bool isOpen();
+            virtual void setWindowMode(const WindowMode mode);
+            virtual void toggleWindowMode();
+            virtual bool isOpen() const;
+            virtual bool isVisible() const;
+            virtual bool isFullscreen() const;
+            virtual WindowMode getWindowMode() const;
 
             virtual HWND getHWnd() const;
             virtual HINSTANCE getHInstance() const;
 
         private:
 
-            HWND m_hWnd;
-            HINSTANCE m_hInstance;
-            Vector2ui32 m_size;
-            std::string m_title;
-            bool m_open;
+
+            /**
+            * Window event functions.
+            *
+            */
+            static LRESULT windowProcStatic(HWND p_HWND, UINT p_Message, WPARAM p_WParam, LPARAM p_LParam);
+            LRESULT windowProc(HWND p_HWND, UINT p_Message, WPARAM p_WParam, LPARAM p_LParam);
+
+            bool            m_open;
+            bool            m_visible;
+            WindowMode      m_windowMode;
+            HWND            m_hWnd;
+            HINSTANCE       m_hInstance;
+            HDC			    m_hDc;
+            Vector2ui32     m_size;
+            std::string     m_title;
+            DWORD           m_style;           ///< Win32 style of window.
+            DWORD           m_extendedStyle;   ///< Win32 extended style of window.
+            std::wstring    m_windowClassName;
             
 
         };
