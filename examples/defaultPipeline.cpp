@@ -34,8 +34,8 @@ int main(int argc, char ** argv)
     settings.setArguments(argc, argv);
     settings.setWindow(&window);
 
-    Flare::Renderer * renderer = new Flare::VulkanRenderer();
-    renderer->load(settings);
+    auto renderer = std::make_unique<Flare::VulkanRenderer>(settings);
+    auto texture = renderer->createTexture();
 
     window.show();
     while (window.isOpen())
@@ -44,8 +44,6 @@ int main(int argc, char ** argv)
         renderer->update();
         renderer->render();
     }
-
-    delete renderer;
 
     return EXIT_SUCCESS;
 }

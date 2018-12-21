@@ -29,14 +29,17 @@
 #include "flare/build.hpp"
 #include "flare/window/window.hpp"
 #include "flare/math/vector.hpp"
+#include "flare/system/memoryAllocator.hpp"
 #include <string>
 #include <vector>
 #include <optional>
+#include <cstdlib>
 
 namespace Flare
 {
 
     class Texture;
+    class Pipeline;
 
     class FLARE_API RendererSettings
     {
@@ -79,6 +82,27 @@ namespace Flare
 
     };
 
+
+    class FLARE_API RenderObject
+    {
+
+    public:
+
+        virtual ~RenderObject();
+
+    };
+
+    enum class FLARE_API RenderObjectType
+    {
+        Texture,
+        Framebuffer,
+        Shader,
+        ShaderProgram
+    };
+
+    typedef RamMemoryAllocator<RenderObjectType, 4> RenderMemoryAllocator;
+
+
     class FLARE_API Renderer
     {
 
@@ -96,7 +120,10 @@ namespace Flare
         virtual void render() = 0;
         virtual void resize(const Vector2ui32 & size) = 0;
 
-        virtual Texture * createTexture() = 0;
+        virtual const RenderMemoryAllocator & memory() const = 0;
+
+        virtual std::shared_ptr<Texture> createTexture() = 0;
+        virtual std::shared_ptr<Pipeline> createPipeline() = 0;
 
     private:
 

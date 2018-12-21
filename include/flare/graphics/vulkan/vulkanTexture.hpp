@@ -40,12 +40,20 @@ namespace Flare
 
     public:
 
+        ~VulkanTexture();
+
+        virtual void load(const uint8_t * buffer = nullptr,
+                          const Vector2ui32 & size = { 0, 0 },
+                          const PixelFormat & pixelFormat = PixelFormat::RGBA,
+                          const bool storeBuffer = false);
+
+        virtual void unload();
+
         virtual Vector2ui32 getSize() const;
 
     private:
 
-        VulkanTexture();
-        ~VulkanTexture();
+        VulkanTexture(RenderMemoryAllocator & allocator);
         VulkanTexture(const VulkanTexture &) = delete;
 
         Vector2ui32 m_size;

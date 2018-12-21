@@ -23,30 +23,40 @@
 *
 */
 
-#ifndef FLARE_GRAPHICS_PIPELINE_HPP
-#define FLARE_GRAPHICS_PIPELINE_HPP
+#ifndef FLARE_SYSTEM_SEMAPHORE_HPP
+#define FLARE_SYSTEM_SEMAPHORE_HPP
 
 #include "flare/build.hpp"
+#include <mutex>
+#include <condition_variable>
 
 namespace Flare
 {
 
-    class Renderer;
-
-    class FLARE_API Pipeline
+    // Implementation of weak semaphore.
+    class FLARE_API Semaphore
     {
 
     public:
 
-        Pipeline(Renderer & renderer);
+        Semaphore();
+        ~Semaphore();
+
+        void wait();
+        bool tryWait();
+        void notifyAll();
+        void notifyOne();
 
     private:
 
-        Renderer & m_renderer;
-
+        int                     m_value;
+        std::mutex              m_mutex;
+        std::condition_variable m_condition;
 
     };
 
 }
+
+#include "semaphore.inl"
 
 #endif

@@ -28,7 +28,8 @@
 namespace Flare
 {
 
-    Texture::Texture()
+    Texture::Texture(RenderMemoryAllocator & allocator) :
+        RenderMemoryAllocator::Object<RenderObjectType::Texture>(allocator)
     { }
 
     Texture::~Texture()

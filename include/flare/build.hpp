@@ -27,6 +27,8 @@
 #define FLARE_BUILD_HPP
 
 #include <stdint.h>
+#include <exception>
+#include <memory>
 
 // Platform
 #if defined( _WIN32 ) || defined( __WIN32__ ) || defined( _WIN64 ) || defined( __WIN64__ )

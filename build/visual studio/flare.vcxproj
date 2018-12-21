@@ -328,12 +328,16 @@ copy /V ..\..\lib\$(targetname).dll ..\..\bin\$(targetname).dll</Command>
     <ClInclude Include="..\..\include\flare\flare.hpp" />
     <ClInclude Include="..\..\include\flare\graphics\pipeline.hpp" />
     <ClInclude Include="..\..\include\flare\graphics\renderer.hpp" />
+    <ClInclude Include="..\..\include\flare\graphics\subpass.hpp" />
     <ClInclude Include="..\..\include\flare\graphics\texture.hpp" />
+    <ClInclude Include="..\..\include\flare\graphics\vulkan\vulkanCleaner.hpp" />
     <ClInclude Include="..\..\include\flare\graphics\vulkan\vulkanRenderer.hpp" />
     <ClInclude Include="..\..\include\flare\graphics\vulkan\vulkanTexture.hpp" />
     <ClInclude Include="..\..\include\flare\math\matrix.hpp" />
     <ClInclude Include="..\..\include\flare\math\vector.hpp" />
     <ClInclude Include="..\..\include\flare\platform\win32Headers.hpp" />
+    <ClInclude Include="..\..\include\flare\system\memoryAllocator.hpp" />
+    <ClInclude Include="..\..\include\flare\system\semaphore.hpp" />
     <ClInclude Include="..\..\include\flare\window\private\win32Window.hpp" />
     <ClInclude Include="..\..\include\flare\window\private\windowBase.hpp" />
     <ClInclude Include="..\..\include\flare\window\window.hpp" />
@@ -341,7 +345,9 @@ copy /V ..\..\lib\$(targetname).dll ..\..\bin\$(targetname).dll</Command>
   <ItemGroup>
     <ClCompile Include="..\..\source\flare\graphics\pipeline.cpp" />
     <ClCompile Include="..\..\source\flare\graphics\renderer.cpp" />
+    <ClCompile Include="..\..\source\flare\graphics\subpass.cpp" />
     <ClCompile Include="..\..\source\flare\graphics\texture.cpp" />
+    <ClCompile Include="..\..\source\flare\graphics\vulkan\vulkanCleaner.cpp" />
     <ClCompile Include="..\..\source\flare\graphics\vulkan\vulkanRenderer.cpp" />
     <ClCompile Include="..\..\source\flare\graphics\vulkan\vulkanTexture.cpp" />
     <ClCompile Include="..\..\source\flare\window\private\win32Window.cpp" />
@@ -350,6 +356,8 @@ copy /V ..\..\lib\$(targetname).dll ..\..\bin\$(targetname).dll</Command>
   <ItemGroup>
     <None Include="..\..\include\flare\math\matrix.inl" />
     <None Include="..\..\include\flare\math\vector.inl" />
+    <None Include="..\..\include\flare\system\memoryAllocator.inl" />
+    <None Include="..\..\include\flare\system\semaphore.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

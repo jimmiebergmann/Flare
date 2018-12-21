@@ -110,6 +110,14 @@ namespace Flare
 
 #endif
 
+
+    // Render object
+    RenderObject::~RenderObject()
+    {
+
+    }
+
+
     // Renderer.
     Renderer::Renderer()
     { }

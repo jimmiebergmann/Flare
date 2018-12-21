@@ -27,20 +27,45 @@
 #define FLARE_GRAPHICS_TEXTURE_HPP
 
 #include "flare/build.hpp"
+#include "flare/graphics/renderer.hpp"
 #include "flare/math/vector.hpp"
+#include "flare/system/memoryAllocator.hpp"
 
 namespace Flare
 {
 
-    class FLARE_API Texture
+    class FLARE_API Texture : public RenderMemoryAllocator::Object<RenderObjectType::Texture>, public RenderObject
     {
 
     public:
 
-        Texture();
+        enum class PixelFormat
+        {
+            RGB,
+            RGBA
+        }; 
+
+        Texture(RenderMemoryAllocator & allocator);
+        
         virtual ~Texture();
 
+        virtual void load(const uint8_t * buffer = nullptr,
+                          const Vector2ui32 & size = {0, 0},
+                          const PixelFormat & pixelFormat = PixelFormat::RGBA,
+                          const bool storeBuffer = false) = 0;
+        
+        virtual void unload() = 0;
+
         virtual Vector2ui32 getSize() const = 0;
+
+    protected:
+
+        
+
+    private:
+
+        Texture(const Texture &) = delete;
+        
 
     };
 

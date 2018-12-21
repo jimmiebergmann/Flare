@@ -29,18 +29,36 @@
 
 namespace Flare
 {
+    void VulkanTexture::load(const uint8_t * buffer,
+                             const Vector2ui32 & size,
+                             const PixelFormat & pixelFormat,
+                             const bool storeBuffer)
+    {
+    
+    }
+
+    VulkanTexture::~VulkanTexture()
+    {
+        unload();
+        setRamUsage(0);
+    }
+
+    void VulkanTexture::unload()
+    {
+
+    }
 
     Vector2ui32 VulkanTexture::getSize() const
     {
         return m_size;
     }
 
-    VulkanTexture::VulkanTexture() :
+    VulkanTexture::VulkanTexture(RenderMemoryAllocator & allocator) :
+        Texture(allocator),
         m_size(0, 0)
-    { }
-
-    VulkanTexture::~VulkanTexture()
-    { }
+    {
+      setRamUsage(sizeof(VulkanTexture));
+    }
 
 }
 

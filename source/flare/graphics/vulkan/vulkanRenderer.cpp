@@ -28,16 +28,32 @@
 #if defined(FLARE_VULKAN)
 
 #include "flare/graphics/vulkan/vulkanTexture.hpp"
+#include "flare/graphics/pipeline.hpp"
+
+#define CHECK_LOADED \
+    if(!m_loaded) { throw std::runtime_error("Renderer has not been loaded."); }\
+
+#define LAMBA_ADD_TO_CLEANER \
+    [this](auto ptr) { m_cleaner.add(ptr); }
+
 
 namespace Flare
 {
 
-    VulkanRenderer::VulkanRenderer()
+    VulkanRenderer::VulkanRenderer() :
+        m_loaded(false)
     {
+    }
+
+    VulkanRenderer::VulkanRenderer(const RendererSettings & settings) :
+        VulkanRenderer()
+    {
+        load(settings);
     }
 
     VulkanRenderer::~VulkanRenderer()
     {
+        m_cleaner.stop();
     }
 
     void VulkanRenderer::setMaxFrameRate(const float fps)
@@ -84,6 +100,9 @@ namespace Flare
             }
         #endif
 
+
+       m_cleaner.start(0.01f, 0.01f);
+       m_loaded = true;
     }
 
     void VulkanRenderer::update()
@@ -99,10 +118,28 @@ namespace Flare
 
     }
 
-    Texture * VulkanRenderer::createTexture()
+    const RenderMemoryAllocator & VulkanRenderer::memory() const
     {
-        Texture * texture = new VulkanTexture();
-        return texture;
+        return m_memory;
+    }
+
+    std::shared_ptr<Texture> VulkanRenderer::createTexture()
+    {
+        CHECK_LOADED;
+
+        auto texture = new VulkanTexture(m_memory);
+        auto ptr = std::shared_ptr<VulkanTexture>(texture, LAMBA_ADD_TO_CLEANER);
+        return ptr;
+    }
+
+    std::shared_ptr<Pipeline> VulkanRenderer::createPipeline()
+    {
+        CHECK_LOADED;
+
+        std::shared_ptr<Pipeline> ptr;
+        //auto ptr = std::make_shared<Pipeline>();
+        //m_memory->incrementMemory(texture);
+        return ptr;
     }
 
 }

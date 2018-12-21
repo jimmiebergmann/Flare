@@ -36,6 +36,18 @@
     <ClInclude Include="..\..\include\flare\window\private\windowBase.hpp">
       <Filter>window\private</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\flare\graphics\subpass.hpp">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\flare\system\memoryAllocator.hpp">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\flare\graphics\vulkan\vulkanCleaner.hpp">
+      <Filter>graphics\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\flare\system\semaphore.hpp">
+      <Filter>system</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">
@@ -55,6 +67,9 @@
     </Filter>
     <Filter Include="window\private">
       <UniqueIdentifier>{513dafcc-3a52-41fc-8e2e-ec96ae7b883b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system">
+      <UniqueIdentifier>{f94c1943-1699-4bdd-8591-f2aabbf6b6ec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +94,12 @@
     <ClCompile Include="..\..\source\flare\window\private\windowBase.cpp">
       <Filter>window\private</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\flare\graphics\subpass.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\flare\graphics\vulkan\vulkanCleaner.cpp">
+      <Filter>graphics\vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\include\flare\math\vector.inl">
@@ -86,6 +107,12 @@
     </None>
     <None Include="..\..\include\flare\math\matrix.inl">
       <Filter>math</Filter>
+    </None>
+    <None Include="..\..\include\flare\system\memoryAllocator.inl">
+      <Filter>system</Filter>
+    </None>
+    <None Include="..\..\include\flare\system\semaphore.inl">
+      <Filter>system</Filter>
     </None>
   </ItemGroup>
 </Project>

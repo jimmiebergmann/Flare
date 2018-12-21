@@ -23,30 +23,54 @@
 *
 */
 
-#ifndef FLARE_GRAPHICS_PIPELINE_HPP
-#define FLARE_GRAPHICS_PIPELINE_HPP
-
-#include "flare/build.hpp"
-
 namespace Flare
 {
 
-    class Renderer;
-
-    class FLARE_API Pipeline
+    inline Semaphore::Semaphore() :
+        m_value(0)
     {
 
-    public:
+    }
 
-        Pipeline(Renderer & renderer);
+    inline Semaphore::~Semaphore()
+    {
 
-    private:
+    }
 
-        Renderer & m_renderer;
+    inline void Semaphore::wait()
+    {
+        std::unique_lock<std::mutex> lock(m_mutex);
+        while (!m_value)
+        {
+            m_condition.wait(lock);
+        }
+        --m_value;
+    }
 
+    inline bool Semaphore::tryWait()
+    {
+        std::unique_lock<std::mutex> lock(m_mutex);
+        if (m_value)
+        {
+            --m_value;
+            return true;
+        }
 
-    };
+        return false;
+    }
+
+    inline void Semaphore::notifyAll()
+    {
+        std::unique_lock<std::mutex> lock(m_mutex);
+        m_value = 0;
+        m_condition.notify_all();
+    }
+
+    inline void Semaphore::notifyOne()
+    {
+        std::unique_lock<std::mutex> lock(m_mutex);
+        ++m_value;
+        m_condition.notify_one();
+    }
 
 }
-
-#endif

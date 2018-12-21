@@ -23,54 +23,42 @@
 *
 */
 
-#ifndef FLARE_GRAPHICS_RENDERERS_VULKAN_RENDERER_HPP
-#define FLARE_GRAPHICS_RENDERERS_VULKAN_RENDERER_HPP
+#ifndef FLARE_GRAPHICS_VULKAN_CLEANER_HPP
+#define FLARE_GRAPHICS_VULKAN_CLEANER_HPP
 
-#include "flare/graphics/renderer.hpp"
+#include "flare/build.hpp"
 
 #if defined(FLARE_VULKAN)
 
-#include "vulkan/vulkan.h"
-#include "vulkanCleaner.hpp"
+#include "flare/graphics/renderer.hpp"
+#include <thread>
+#include <mutex>
+#include <queue>
 #include <atomic>
-#include <set>
 
 namespace Flare
 {
 
-    class VulkanTexture;
-
-    class FLARE_API VulkanRenderer : public Renderer
+    class FLARE_API VulkanCleaner
     {
 
     public:
 
-        VulkanRenderer();
-        VulkanRenderer(const RendererSettings & settings);
-        ~VulkanRenderer();
+        VulkanCleaner();
+        ~VulkanCleaner();
 
-        virtual void setMaxFrameRate(const float fps);
-        virtual void setUnlimitedFrameRate();
-        virtual float getMaxFrameRate() const;
-
-        virtual void load(const RendererSettings & settings);
-        virtual void update();
-        virtual void render();
-        virtual void resize(const Vector2ui32 & size);
-
-        virtual const RenderMemoryAllocator & memory() const;
-
-        virtual std::shared_ptr<Texture> createTexture();
-        virtual std::shared_ptr<Pipeline> createPipeline();
+        void start(float refreshTime, float maxTime);
+        void stop();
+        void add(RenderObject * ptr);
 
     private:
 
-        VulkanRenderer(const VulkanRenderer &) = delete;
-
-        RenderMemoryAllocator   m_memory;
-        std::atomic<float>      m_maxFrameRate;
-        VulkanCleaner           m_cleaner;
-        bool                    m_loaded;
+        std::atomic<bool>           m_running;
+        std::thread                 m_thread;
+        std::mutex                  m_mutex;
+        std::queue<RenderObject *>  m_objects;
+        float                       m_refreshTime;
+        float                       m_maxTime;
 
     };
 

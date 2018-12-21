@@ -23,27 +23,44 @@
 *
 */
 
-#ifndef FLARE_GRAPHICS_PIPELINE_HPP
-#define FLARE_GRAPHICS_PIPELINE_HPP
+#ifndef FLARE_GRAPHICS_SUBPASS_HPP
+#define FLARE_GRAPHICS_SUBPASS_HPP
 
 #include "flare/build.hpp"
+#include <vector>
 
 namespace Flare
 {
 
     class Renderer;
 
-    class FLARE_API Pipeline
+    class FLARE_API Subpass
     {
 
     public:
 
-        Pipeline(Renderer & renderer);
+        virtual ~Subpass();
+
+        virtual void load(Renderer & renderer) = 0;
+
+    };
+
+    class Multipass : public Subpass
+    {
+
+    public:
+
+        virtual void load(Renderer & renderer) = 0;
+
+        std::vector<Subpass *>::const_iterator addSubpass(Subpass * subpass);
+        std::vector<Subpass *>::const_iterator addSubpass(std::vector<Subpass *>::const_iterator position, Subpass * subpass);
+        std::vector<Subpass *>::const_iterator eraseSubpass(Subpass * subpass);
+        std::vector<Subpass *>::const_iterator firstSubpass() const;
+        std::vector<Subpass *>::const_iterator lastSubpass() const;
 
     private:
 
-        Renderer & m_renderer;
-
+        std::vector<Subpass *> m_subpasses;
 
     };
 

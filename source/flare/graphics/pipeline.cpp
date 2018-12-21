@@ -28,4 +28,8 @@
 namespace Flare
 {
 
+    Pipeline::Pipeline(Renderer & renderer) :
+        m_renderer(renderer)
+    { }
+
 }
