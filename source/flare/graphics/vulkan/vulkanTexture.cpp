@@ -29,6 +29,15 @@
 
 namespace Flare
 {
+
+    static const size_t g_pixelFormatBytes[2] = { 3, 4 };
+
+    VulkanTexture::~VulkanTexture()
+    {
+        unload();
+        setRamUsage(0);
+    }
+    
     void VulkanTexture::load(const uint8_t * buffer,
                              const Vector2ui32 & size,
                              const PixelFormat & pixelFormat,
@@ -37,15 +46,34 @@ namespace Flare
     
     }
 
-    VulkanTexture::~VulkanTexture()
+    void VulkanTexture::load(const std::string & filename, const bool storeBuffer)
     {
-        unload();
-        setRamUsage(0);
+
     }
 
     void VulkanTexture::unload()
     {
 
+    }
+
+    const uint8_t * VulkanTexture::getBuffer() const
+    {
+        return m_pBuffer;
+    }
+
+    size_t VulkanTexture::getBufferSize() const
+    {
+        if (!m_pBuffer)
+        {
+            return 0;
+        }
+
+        return m_size.x * m_size.y * g_pixelFormatBytes[static_cast<size_t>(m_pixelFormat)];
+    }
+
+    VulkanTexture::PixelFormat VulkanTexture::getPixelFormat() const
+    {
+        return m_pixelFormat;
     }
 
     Vector2ui32 VulkanTexture::getSize() const
@@ -55,7 +83,8 @@ namespace Flare
 
     VulkanTexture::VulkanTexture(RenderMemoryAllocator & allocator) :
         Texture(allocator),
-        m_size(0, 0)
+        m_size(0, 0),
+        m_pBuffer(nullptr)
     {
       setRamUsage(sizeof(VulkanTexture));
     }

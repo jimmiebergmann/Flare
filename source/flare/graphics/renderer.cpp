@@ -32,12 +32,25 @@ namespace Flare
 
 
     RendererSettings::RendererSettings(const int argc, const char ** argv) :
+        m_debug(false),
         m_frameRate(0),
         m_pWindow(nullptr)
 #if defined(FLARE_PLATFORM_WINDOWS)
         ,
         m_hWnd(nullptr),
         m_hInstance(nullptr)
+#endif
+    { }
+
+    RendererSettings::RendererSettings(const RendererSettings & settings) :
+        m_arguments(settings.m_arguments),
+        m_debug(settings.m_debug),
+        m_frameRate(settings.m_frameRate),
+        m_pWindow(settings.m_pWindow)
+#if defined(FLARE_PLATFORM_WINDOWS)
+        ,
+        m_hWnd(settings.m_hWnd),
+        m_hInstance(settings.m_hInstance)
 #endif
     { }
 
@@ -59,6 +72,16 @@ namespace Flare
     const std::vector<std::string> RendererSettings::getArguments() const
     {
         return m_arguments;
+    }
+
+    void RendererSettings::setDebug(bool flag)
+    {
+        m_debug = flag;
+    }
+
+    bool RendererSettings::getDebug() const
+    {
+        return m_debug;
     }
 
     void RendererSettings::setMaxFrameRate(const float fps)

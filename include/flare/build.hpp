@@ -29,6 +29,7 @@
 #include <stdint.h>
 #include <exception>
 #include <memory>
+#include <string>
 
 // Platform
 #if defined( _WIN32 ) || defined( __WIN32__ ) || defined( _WIN64 ) || defined( __WIN64__ )

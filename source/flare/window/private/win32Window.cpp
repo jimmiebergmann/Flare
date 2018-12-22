@@ -226,6 +226,16 @@ namespace Flare
             return m_windowMode;
         }
 
+        const Vector2ui32 & Win32Window::getSize() const
+        {
+            return m_size;
+        }
+
+        const std::string & Win32Window::getTitle() const
+        {
+            return m_title;
+        }
+
         HWND Win32Window::getHWnd() const
         {
             return m_hWnd;

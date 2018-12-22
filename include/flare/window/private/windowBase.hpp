@@ -60,6 +60,8 @@ namespace Flare
             virtual bool isVisible() const = 0;
             virtual bool isFullscreen() const = 0;
             virtual WindowMode getWindowMode() const = 0;
+            virtual const Vector2ui32 & getSize() const = 0;
+            virtual const std::string & getTitle() const = 0;
 
         #if defined(FLARE_PLATFORM_WINDOWS)
             virtual HWND getHWnd() const = 0;

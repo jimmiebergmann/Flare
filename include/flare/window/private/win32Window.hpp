@@ -58,6 +58,8 @@ namespace Flare
             virtual bool isVisible() const;
             virtual bool isFullscreen() const;
             virtual WindowMode getWindowMode() const;
+            virtual const Vector2ui32 & getSize() const;
+            virtual const std::string & getTitle() const;
 
             virtual HWND getHWnd() const;
             virtual HINSTANCE getHInstance() const;
@@ -82,8 +84,7 @@ namespace Flare
             std::string     m_title;
             DWORD           m_style;           ///< Win32 style of window.
             DWORD           m_extendedStyle;   ///< Win32 extended style of window.
-            std::wstring    m_windowClassName;
-            
+            std::wstring    m_windowClassName;          
 
         };
 

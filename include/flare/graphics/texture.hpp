@@ -54,7 +54,15 @@ namespace Flare
                           const PixelFormat & pixelFormat = PixelFormat::RGBA,
                           const bool storeBuffer = false) = 0;
         
+        virtual void load(const std::string & filename, const bool storeBuffer = false) = 0;
+
         virtual void unload() = 0;
+
+        virtual const uint8_t * getBuffer() const = 0;
+
+        virtual size_t getBufferSize() const = 0;
+
+        virtual PixelFormat getPixelFormat() const = 0;
 
         virtual Vector2ui32 getSize() const = 0;
 

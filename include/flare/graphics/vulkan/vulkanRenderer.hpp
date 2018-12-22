@@ -31,9 +31,14 @@
 #if defined(FLARE_VULKAN)
 
 #include "vulkan/vulkan.h"
+#if defined(FLARE_PLATFORM_WINDOWS)
+#include "vulkan/vulkan_win32.h"
+#endif
 #include "vulkanCleaner.hpp"
 #include <atomic>
 #include <set>
+#include <vector>
+#include <optional>
 
 namespace Flare
 {
@@ -49,11 +54,8 @@ namespace Flare
         VulkanRenderer(const RendererSettings & settings);
         ~VulkanRenderer();
 
-        virtual void setMaxFrameRate(const float fps);
-        virtual void setUnlimitedFrameRate();
-        virtual float getMaxFrameRate() const;
-
         virtual void load(const RendererSettings & settings);
+        virtual void unload();
         virtual void update();
         virtual void render();
         virtual void resize(const Vector2ui32 & size);
@@ -67,10 +69,101 @@ namespace Flare
 
         VulkanRenderer(const VulkanRenderer &) = delete;
 
+        struct VulkanGraphicDevice
+        {
+            VulkanGraphicDevice();
+            bool isSuitable() const;
+
+            VkPhysicalDevice                physicalDevice;
+            VkDevice                        logicalDevice;
+            std::optional<uint32_t>         graphicsFamily;
+            std::optional<uint32_t>         presentFamily;
+            bool                            hasDeviceExtensionSupport;
+            VkSurfaceCapabilitiesKHR        surfaceCapabilities;
+            std::vector<VkSurfaceFormatKHR> surfaceFormats;
+            std::vector<VkPresentModeKHR>   presentModes;
+        };
+
+        #if defined(FLARE_PLATFORM_WINDOWS)
+        void getHWndHInstance(HWND & hWnd, HINSTANCE & hInstance);
+        #endif
+
+        // Vulkan loading methods.
+        static VKAPI_ATTR VkBool32 VKAPI_CALL staticDebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT, VkDebugUtilsMessageTypeFlagsEXT, const VkDebugUtilsMessengerCallbackDataEXT*, void*);
+        bool loadCheckValidationLayerSupport();
+        void loadGetRequiredExtensions(std::vector<const char*> & extensions);
+        void loadCreateInstance();
+        void loadSetupDebugCallback();
+        void loadCreateSurface();
+        void loadGraphicDevice(VulkanGraphicDevice & graphicDevice, VkPhysicalDevice physicalDevice);
+        void loadScorePhysicalDevice(VkPhysicalDevice physicalDevice, uint32_t & score);
+        void loadPickPhysicalDevice();
+        void loadCreateLogicalDevice();
+        void loadChooseSwapSurfaceFormat();
+        void loadChooseSwapPresentMode();
+        void loadChooseSwapExtent();
+        void loadCreateSwapChain();
+        void loadCreateImageViews();
+        void loadCreateRenderPass();
+        void loadCreateGraphicsPipeline();
+        void loadCreateShaderModule(const std::vector<char> & code, VkShaderModule & shaderModule) const;
+        void loadCreateFramebuffers();
+        void loadCreateCommandPool();
+        void loadCreateCommandBuffers();
+        void loadDrawFrame();
+        void loadCreateSyncObjects();
+
+        // Vulkan structures.
+        VkInstance                  m_instance;
+        VkDebugUtilsMessengerEXT    m_callback;
+        VkSurfaceKHR                m_surface;
+        VulkanGraphicDevice         m_graphicDevice;
+        VkQueue                     m_graphicQueue;
+        VkQueue                     m_presentQueue;
+        VkSwapchainKHR              m_swapChain;
+        VkExtent2D                  m_swapChainExtent;
+        VkSurfaceFormatKHR          m_swapChainSurfaceFormat;
+        VkPresentModeKHR            m_swapChainPresentMode;
+        std::vector<VkImage>        m_swapChainImages;
+        std::vector<VkImageView>    m_swapChainImageViews;
+        VkRenderPass                m_renderPass;
+        VkPipelineLayout            m_pipelineLayout;
+        VkPipeline                  m_graphicsPipeline;
+        std::vector<VkFramebuffer>  m_swapChainFramebuffers;
+        VkCommandPool               m_commandPool;
+        std::vector<VkCommandBuffer> m_commandBuffers;
+        std::vector<VkSemaphore>    m_imageAvailableSemaphores;
+        std::vector<VkSemaphore>    m_renderFinishedSemaphores;
+        std::vector<VkFence>        m_inFlightFences;
+        size_t                      m_currentFrame;
+
+        //VkPhysicalDevice m_physicalDevice;
+        /*uint32_t m_graphicFamily;
+        VkDevice m_device;
+        VkQueue m_graphicQueue;
+        VkQueue m_presentQueue;
+        VkSurfaceKHR m_surface;
+        VkSwapchainKHR m_swapChain;
+        std::vector<VkImage> m_swapChainImages;
+        VkFormat m_swapChainImageFormat;
+        VkExtent2D m_swapChainExtent;
+        std::vector<VkImageView> m_swapChainImageViews;
+        VkRenderPass m_renderPass;
+        VkPipelineLayout m_pipelineLayout;
+        VkPipeline m_graphicsPipeline;
+        std::vector<VkFramebuffer> m_swapChainFramebuffers;
+        VkCommandPool m_commandPool;
+        std::vector<VkCommandBuffer> m_commandBuffers;
+        std::vector<VkSemaphore> m_imageAvailableSemaphores;
+        std::vector<VkSemaphore> m_renderFinishedSemaphores;
+        std::vector<VkFence> m_inFlightFences;
+        size_t m_currentFrame;*/
+
         RenderMemoryAllocator   m_memory;
-        std::atomic<float>      m_maxFrameRate;
         VulkanCleaner           m_cleaner;
+        RendererSettings        m_settings;
         bool                    m_loaded;
+
 
     };
 

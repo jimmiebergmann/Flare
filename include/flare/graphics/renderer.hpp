@@ -47,10 +47,14 @@ namespace Flare
     public:
 
         RendererSettings(const int argc = 0, const char ** argv = nullptr);
+        RendererSettings(const RendererSettings & settings);
 
         void setArguments(int argv, char ** argc);
         void setArguments(const std::vector<std::string> & argumnets);
         const std::vector<std::string> getArguments() const;
+
+        void setDebug(bool flag);
+        bool getDebug() const;
 
         void setMaxFrameRate(const float fps);
         void setUnlimitedFrameRate();
@@ -68,9 +72,9 @@ namespace Flare
 
     private:
 
-        float m_frameRate;
         std::vector<std::string> m_arguments;
-
+        bool m_debug;
+        float m_frameRate;
         // Window configurations.
         Window * m_pWindow;
 
@@ -111,11 +115,8 @@ namespace Flare
         Renderer();
         virtual ~Renderer();
 
-        virtual void setMaxFrameRate(const float fps) = 0;
-        virtual void setUnlimitedFrameRate() = 0;
-        virtual float getMaxFrameRate() const = 0;
-
         virtual void load(const RendererSettings & settings) = 0;
+        virtual void unload() = 0;
         virtual void update() = 0;
         virtual void render() = 0;
         virtual void resize(const Vector2ui32 & size) = 0;

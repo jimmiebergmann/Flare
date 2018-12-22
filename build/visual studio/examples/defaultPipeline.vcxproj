@@ -223,7 +223,7 @@
       </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>flare-x64-sd.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>flare-x64-sd.lib;vulkan-1.lib;VkLayer_utils.lib;VkLayer_unique_objects.lib;VkLayer_threading.lib;VkLayer_screenshot.lib;VkLayer_parameter_validation.lib;VkLayer_object_tracker.lib;VkLayer_monitor.lib;VkLayer_core_validation.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Debug|x64'">

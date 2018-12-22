@@ -47,7 +47,15 @@ namespace Flare
                           const PixelFormat & pixelFormat = PixelFormat::RGBA,
                           const bool storeBuffer = false);
 
+        virtual void load(const std::string & filename, const bool storeBuffer = false);
+
         virtual void unload();
+
+        virtual const uint8_t * getBuffer() const;
+
+        virtual size_t getBufferSize() const;
+
+        virtual PixelFormat getPixelFormat() const;
 
         virtual Vector2ui32 getSize() const;
 
@@ -57,6 +65,8 @@ namespace Flare
         VulkanTexture(const VulkanTexture &) = delete;
 
         Vector2ui32 m_size;
+        PixelFormat m_pixelFormat;
+        uint8_t *   m_pBuffer;
 
         friend class VulkanRenderer;
 

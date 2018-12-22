@@ -28,21 +28,24 @@
 
 int main(int argc, char ** argv)
 {
-    Flare::Window window({ 800, 600 }, "Default pipeline example.");
-
-    Flare::RendererSettings settings;
-    settings.setArguments(argc, argv);
-    settings.setWindow(&window);
-
-    auto renderer = std::make_unique<Flare::VulkanRenderer>(settings);
-    auto texture = renderer->createTexture();
-
-    window.show();
-    while (window.isOpen())
     {
-        window.update();
-        renderer->update();
-        renderer->render();
+        Flare::Window window({ 800, 600 }, "Default pipeline example.");
+
+        Flare::RendererSettings settings;
+        settings.setDebug(true);
+        settings.setArguments(argc, argv);
+        settings.setWindow(&window);
+
+        auto renderer = std::make_unique<Flare::VulkanRenderer>(settings);
+        auto texture = renderer->createTexture();
+
+        window.show();
+        while (window.isOpen())
+        {
+            window.update();
+            renderer->update();
+            renderer->render();
+        }
     }
 
     return EXIT_SUCCESS;
