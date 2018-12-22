@@ -223,22 +223,24 @@ namespace Flare
 #if defined(FLARE_PLATFORM_WINDOWS)
     void VulkanRenderer::getHWndHInstance(HWND & hWnd, HINSTANCE & hInstance)
     {
+        hWnd = 0;
+        hInstance = 0;
+
         const Window * pWindow = m_settings.getWindow();
+        const WindowProxy & windowProxy = m_settings.getWindowProxy();
 
-        if ((hWnd = m_settings.getHWnd()) == nullptr)
+        if (pWindow)
         {
-            if (pWindow)
-            {
-                hWnd = pWindow->getHWnd();
-            }
+            hWnd = pWindow->getHWnd();
+            hInstance = pWindow->getHInstance();
         }
-
-        if ((hInstance = m_settings.getHInstance()) == nullptr)
+        if (!hWnd)
         {
-            if (pWindow)
-            {
-                hInstance = pWindow->getHInstance();
-            }
+            hWnd = windowProxy.getHWnd();
+        }
+        if (!hInstance)
+        {
+            hInstance = windowProxy.getHInstance();
         }
     }
 #endif
@@ -373,6 +375,11 @@ namespace Flare
 
     void VulkanRenderer::loadSetupDebugCallback()
     {
+        if (!m_settings.getDebug())
+        {
+            return;
+        }
+
         VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
         createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
         createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |

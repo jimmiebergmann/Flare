@@ -23,24 +23,46 @@
 *
 */
 
-#include <iostream>
-#include "flare/flare.hpp"
-
-int main(int argc, char ** argv)
+namespace Flare
 {
-    Flare::Window window({ 800, 600 }, "Flare - Default pipeline example.");
 
-    Flare::RendererSettings settings;
-    settings.setWindow(&window);
+#if defined(FLARE_PLATFORM_WINDOWS)
+        
+    inline WindowProxy::WindowProxy() :
+        m_hWnd(0),
+        m_hInstance(0)
+    { }
 
-    auto renderer = std::make_unique<Flare::VulkanRenderer>(settings);
+    inline WindowProxy::WindowProxy(const Window & window) :
+        m_hWnd(window.getHWnd()),
+        m_hInstance(window.getHInstance())
+    { }
 
-    window.show();
-    while (window.update())
+    inline WindowProxy::WindowProxy(const HWND hWnd, const HINSTANCE hInstance) :
+        m_hWnd(hWnd),
+        m_hInstance(hInstance)
+    { }
+
+    inline HWND WindowProxy::getHWnd() const
     {
-        renderer->update();
-        renderer->render();
+        return m_hWnd;
     }
- 
-    return EXIT_SUCCESS;
+
+    inline void WindowProxy::setHWnd(const HWND hWnd)
+    {
+        m_hWnd = hWnd;
+    }
+
+    inline HINSTANCE WindowProxy::getHInstance() const
+    {
+        return m_hInstance;
+    }
+
+    inline void WindowProxy::setHInstance(const HINSTANCE hInstance)
+    {
+        m_hInstance = hInstance;
+    }
+
+#endif    
+
 }

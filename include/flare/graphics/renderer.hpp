@@ -28,6 +28,7 @@
 
 #include "flare/build.hpp"
 #include "flare/window/window.hpp"
+#include "flare/window/windowProxy.hpp"
 #include "flare/math/vector.hpp"
 #include "flare/system/memoryAllocator.hpp"
 #include <string>
@@ -49,7 +50,7 @@ namespace Flare
         RendererSettings(const int argc = 0, const char ** argv = nullptr);
         RendererSettings(const RendererSettings & settings);
 
-        void setArguments(int argv, char ** argc);
+        void setArguments(const int argc, const char ** argv);
         void setArguments(const std::vector<std::string> & argumnets);
         const std::vector<std::string> getArguments() const;
 
@@ -63,12 +64,8 @@ namespace Flare
         void setWindow(Window * window);
         Window * getWindow() const;
 
-    #if defined(FLARE_PLATFORM_WINDOWS)
-        void setHWnd(const HWND hWnd);
-        HWND getHWnd() const;
-        void setHInstance(const HINSTANCE hInstance);
-        HINSTANCE getHInstance() const;
-    #endif
+        void setWindowProxy(const WindowProxy & windowProxy);
+        const WindowProxy & getWindowProxy() const;
 
     private:
 
@@ -77,12 +74,7 @@ namespace Flare
         float m_frameRate;
         // Window configurations.
         Window * m_pWindow;
-
-    #if defined(FLARE_PLATFORM_WINDOWS)
-        HWND m_hWnd;
-        HINSTANCE m_hInstance;
-    #endif
-
+        WindowProxy m_windowProxy;
 
     };
 

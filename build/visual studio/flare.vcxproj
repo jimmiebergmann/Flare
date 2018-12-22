@@ -341,6 +341,7 @@ copy /V ..\..\lib\$(targetname).dll ..\..\bin\$(targetname).dll</Command>
     <ClInclude Include="..\..\include\flare\window\private\win32Window.hpp" />
     <ClInclude Include="..\..\include\flare\window\private\windowBase.hpp" />
     <ClInclude Include="..\..\include\flare\window\window.hpp" />
+    <ClInclude Include="..\..\include\flare\window\windowProxy.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\flare\graphics\pipeline.cpp" />
@@ -358,6 +359,7 @@ copy /V ..\..\lib\$(targetname).dll ..\..\bin\$(targetname).dll</Command>
     <None Include="..\..\include\flare\math\vector.inl" />
     <None Include="..\..\include\flare\system\memoryAllocator.inl" />
     <None Include="..\..\include\flare\system\semaphore.inl" />
+    <None Include="..\..\include\flare\window\windowProxy.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -48,6 +48,9 @@
     <ClInclude Include="..\..\include\flare\system\semaphore.hpp">
       <Filter>system</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\flare\window\windowProxy.hpp">
+      <Filter>window</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">
@@ -113,6 +116,9 @@
     </None>
     <None Include="..\..\include\flare\system\semaphore.inl">
       <Filter>system</Filter>
+    </None>
+    <None Include="..\..\include\flare\window\windowProxy.inl">
+      <Filter>window</Filter>
     </None>
   </ItemGroup>
 </Project>

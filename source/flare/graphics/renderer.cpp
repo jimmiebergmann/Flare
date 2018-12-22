@@ -32,35 +32,39 @@ namespace Flare
 
 
     RendererSettings::RendererSettings(const int argc, const char ** argv) :
+#if defined(FLARE_BUILD_DEBUG)
+        m_debug(true),
+#else
         m_debug(false),
+#endif
         m_frameRate(0),
         m_pWindow(nullptr)
-#if defined(FLARE_PLATFORM_WINDOWS)
-        ,
-        m_hWnd(nullptr),
-        m_hInstance(nullptr)
-#endif
-    { }
+    {
+        for (int i = 1; i < argc; i++)
+        {
+            m_arguments.push_back(argv[i]);
+        }
+    }
 
     RendererSettings::RendererSettings(const RendererSettings & settings) :
-        m_arguments(settings.m_arguments),
-        m_debug(settings.m_debug),
-        m_frameRate(settings.m_frameRate),
-        m_pWindow(settings.m_pWindow)
-#if defined(FLARE_PLATFORM_WINDOWS)
-        ,
-        m_hWnd(settings.m_hWnd),
-        m_hInstance(settings.m_hInstance)
+#if defined(FLARE_BUILD_DEBUG)
+        m_debug(true),
+#else
+        m_debug(false),
 #endif
+        m_arguments(settings.m_arguments),
+        m_frameRate(settings.m_frameRate),
+        m_pWindow(settings.m_pWindow),
+        m_windowProxy(settings.m_windowProxy)
     { }
 
-    void RendererSettings::setArguments(int argv, char ** argc)
+    void RendererSettings::setArguments(const int argc, const char ** argv)
     {
         // Parse arguments.
         // ...
-        for (int i = 1; i < argv; i++)
+        for (int i = 1; i < argc; i++)
         {
-            m_arguments.push_back(argc[i]);
+            m_arguments.push_back(argv[i]);
         }
     }
 
@@ -109,30 +113,15 @@ namespace Flare
         return m_pWindow;
     }
 
-#if defined(FLARE_PLATFORM_WINDOWS)
-  
-    void RendererSettings::setHWnd(const HWND hWnd)
+    void  RendererSettings::setWindowProxy(const WindowProxy & windowProxy)
     {
-        m_hWnd = hWnd;
+        m_windowProxy = windowProxy;
     }
 
-    HWND RendererSettings::getHWnd() const
+    const WindowProxy &  RendererSettings::getWindowProxy() const
     {
-        return m_hWnd;
+        return m_windowProxy;
     }
-
-    void RendererSettings::setHInstance(const HINSTANCE hInstance)
-    {
-        m_hInstance = hInstance;
-    }
-
-    HINSTANCE RendererSettings::getHInstance() const
-    {
-        return m_hInstance;
-    }
-
-#endif
-
 
     // Render object
     RenderObject::~RenderObject()
