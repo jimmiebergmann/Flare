@@ -40,9 +40,8 @@ int main(int argc, char ** argv)
         auto texture = renderer->createTexture();
 
         window.show();
-        while (window.isOpen())
+        while (window.update())
         {
-            window.update();
             renderer->update();
             renderer->render();
         }

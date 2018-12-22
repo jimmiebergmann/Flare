@@ -48,6 +48,7 @@ namespace Flare
 
         Win32Window::Win32Window() :
             m_open(false),
+            m_closed(false),
             m_visible(false),
             m_windowMode(WindowMode::Windowed),
             m_hWnd(nullptr),
@@ -73,6 +74,7 @@ namespace Flare
             {
                 close();
             }
+            m_closed = false;
 
             // Get default styles.
             m_extendedStyle = WS_EX_APPWINDOW;
@@ -154,30 +156,45 @@ namespace Flare
             {
                 throw std::runtime_error("Failed to release win32 device context.");
             }
+            m_hDc = nullptr;
+
             if (m_hWnd && !DestroyWindow(m_hWnd))
             {
                 throw std::runtime_error("Failed to destroy win32 class.");
             }
+            m_hWnd = nullptr;
+
             if (m_windowClassName.size() && !UnregisterClass(m_windowClassName.c_str(), m_hInstance))
             {
                 throw std::runtime_error("Failed to unregister win32 class.");
             }
-    
-            m_hWnd = nullptr;
             m_hInstance = nullptr;
-            m_hDc = nullptr;
             m_windowClassName.clear();
             m_open = false;
+            m_closed = false;
         }
 
-        void Win32Window::update()
+        bool Win32Window::update()
         {
+            if (!m_open)
+            {
+                return false;
+            }
+
             MSG message;
             while (PeekMessage(&message, NULL, NULL, NULL, PM_REMOVE))
             {
                 TranslateMessage(&message);
                 DispatchMessage(&message);
             }
+
+            if (m_closed)
+            {
+                close();
+                return false;
+            }
+
+            return true;
         }
 
         void Win32Window::show()
@@ -273,9 +290,18 @@ namespace Flare
             {
                 case WM_CLOSE:
                 {
-                    close();
+                    m_closed = true;
+                    return 0;
                 }
                 break;
+                case WM_ERASEBKGND:
+                {
+                    
+                    return 0;
+                }
+                break;
+
+                
                 default:
                     break;
 

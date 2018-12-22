@@ -145,14 +145,14 @@
     <TargetName>defaultPipeline-x86-sd</TargetName>
     <IntDir>..\..\..\obj\examples\defaultPipeline\windows\x86\static\debug\</IntDir>
     <IncludePath>..\..\..\include;$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\..\lib;$(VULKAN_SDK)\Lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\..\..\lib;$(VULKAN_SDK)\Lib32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'">
     <OutDir>..\..\..\bin\</OutDir>
     <TargetName>defaultPipeline-x86-s</TargetName>
     <IntDir>..\..\..\obj\examples\defaultPipeline\windows\x86\static\release\</IntDir>
     <IncludePath>..\..\..\include;$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\..\lib;$(VULKAN_SDK)\Lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\..\..\lib;$(VULKAN_SDK)\Lib32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Debug|x64'">
     <OutDir>..\..\..\bin\</OutDir>

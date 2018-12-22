@@ -95,6 +95,7 @@ namespace Flare
         void loadCreateInstance();
         void loadSetupDebugCallback();
         void loadCreateSurface();
+        void loadQuerySwapChainSupport(VulkanGraphicDevice & graphicDevice, VkPhysicalDevice physicalDevice);
         void loadGraphicDevice(VulkanGraphicDevice & graphicDevice, VkPhysicalDevice physicalDevice);
         void loadScorePhysicalDevice(VkPhysicalDevice physicalDevice, uint32_t & score);
         void loadPickPhysicalDevice();
@@ -112,6 +113,9 @@ namespace Flare
         void loadCreateCommandBuffers();
         void loadDrawFrame();
         void loadCreateSyncObjects();
+
+        void unloadSwapChain();
+        void recreateSwapChain();
 
         // Vulkan structures.
         VkInstance                  m_instance;

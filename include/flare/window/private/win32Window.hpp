@@ -49,7 +49,7 @@ namespace Flare
 
             virtual void open(const Vector2ui32 & size, const std::string & title);
             virtual void close();
-            virtual void update();
+            virtual bool update();
             virtual void show();
             virtual void hide();
             virtual void setWindowMode(const WindowMode mode);
@@ -75,6 +75,7 @@ namespace Flare
             LRESULT windowProc(HWND p_HWND, UINT p_Message, WPARAM p_WParam, LPARAM p_LParam);
 
             bool            m_open;
+            bool            m_closed;
             bool            m_visible;
             WindowMode      m_windowMode;
             HWND            m_hWnd;

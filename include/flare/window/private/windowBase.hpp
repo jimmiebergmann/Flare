@@ -51,7 +51,7 @@ namespace Flare
 
             virtual void open(const Vector2ui32 & size, const std::string & title) = 0;
             virtual void close() = 0;
-            virtual void update() = 0;
+            virtual bool update() = 0;
             virtual void show() = 0;
             virtual void hide() = 0;
             virtual void setWindowMode(const WindowMode mode) = 0;

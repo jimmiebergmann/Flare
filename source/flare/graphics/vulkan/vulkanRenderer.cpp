@@ -60,17 +60,17 @@ namespace Flare
 {
 
     VulkanRenderer::VulkanRenderer() :
-        m_instance(nullptr),
-        m_callback(nullptr),
-        m_surface(nullptr),
+        m_instance(0),
+        m_callback(0),
+        m_surface(0),
         m_graphicDevice(),
-        m_graphicQueue(nullptr),
-        m_presentQueue(nullptr),
-        m_swapChain(nullptr),
-        m_renderPass(nullptr),
-        m_pipelineLayout(nullptr),
-        m_graphicsPipeline(nullptr),
-        m_commandPool(nullptr),
+        m_graphicQueue(0),
+        m_presentQueue(0),
+        m_swapChain(0),
+        m_renderPass(0),
+        m_pipelineLayout(0),
+        m_graphicsPipeline(0),
+        m_commandPool(0),
         m_currentFrame(0),
         m_loaded(false)
     {
@@ -119,6 +119,9 @@ namespace Flare
     {
         m_cleaner.stop();
 
+
+        unloadSwapChain();
+
         if (m_graphicDevice.logicalDevice)
         {
             for (auto & sem : m_renderFinishedSemaphores)
@@ -140,47 +143,11 @@ namespace Flare
             if (m_commandPool)
             {
                 vkDestroyCommandPool(m_graphicDevice.logicalDevice, m_commandPool, nullptr);
-                m_commandPool = nullptr;
-            }
-
-            for (auto framebuffer : m_swapChainFramebuffers)
-            {
-                vkDestroyFramebuffer(m_graphicDevice.logicalDevice, framebuffer, nullptr);
-            }
-            m_swapChainFramebuffers.clear();
-
-            if (m_graphicsPipeline)
-            {
-                vkDestroyPipeline(m_graphicDevice.logicalDevice, m_graphicsPipeline, nullptr);
-                m_graphicsPipeline = nullptr;
-            }
-
-            if (m_pipelineLayout)
-            {
-                vkDestroyPipelineLayout(m_graphicDevice.logicalDevice, m_pipelineLayout, nullptr);
-                m_pipelineLayout = nullptr;
-            }
-
-            if (m_renderPass)
-            {
-                vkDestroyRenderPass(m_graphicDevice.logicalDevice, m_renderPass, nullptr);
-                m_renderPass = nullptr;
-            }
-            
-            for (auto & imageView : m_swapChainImageViews)
-            {
-                vkDestroyImageView(m_graphicDevice.logicalDevice, imageView, nullptr);
-            }
-            m_swapChainImageViews.clear();
-
-            if (m_swapChain)
-            {
-                vkDestroySwapchainKHR(m_graphicDevice.logicalDevice, m_swapChain, nullptr);
-                m_swapChain = nullptr;
+                m_commandPool = 0;
             }
 
             vkDestroyDevice(m_graphicDevice.logicalDevice, nullptr);
-            m_graphicDevice.logicalDevice = nullptr;
+            m_graphicDevice.logicalDevice = 0;
         }
 
         if (m_instance)
@@ -188,17 +155,17 @@ namespace Flare
             if (m_callback)
             {
                 vulkanDestroyDebugUtilsMessengerEXT(m_instance, m_callback, nullptr);
-                m_callback = nullptr;
+                m_callback = 0;
             }
 
             if (m_surface)
             {
                 vkDestroySurfaceKHR(m_instance, m_surface, nullptr);
-                m_surface = nullptr;
+                m_surface = 0;
             }
             
             vkDestroyInstance(m_instance, nullptr);
-            m_instance = nullptr;
+            m_instance = 0;
         }
     }
 
@@ -448,6 +415,27 @@ namespace Flare
 #endif
     }
 
+    void VulkanRenderer::loadQuerySwapChainSupport(VulkanGraphicDevice & graphicDevice, VkPhysicalDevice physicalDevice)
+    {
+        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, m_surface, &graphicDevice.surfaceCapabilities);
+
+        uint32_t formatCount = 0;
+        vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, m_surface, &formatCount, nullptr);
+        if (formatCount != 0)
+        {
+            graphicDevice.surfaceFormats.resize(formatCount);
+            vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, m_surface, &formatCount, graphicDevice.surfaceFormats.data());
+        }
+
+        uint32_t presentModeCount = 0;
+        vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, m_surface, &presentModeCount, nullptr);
+        if (presentModeCount != 0)
+        {
+            graphicDevice.presentModes.resize(presentModeCount);
+            vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, m_surface, &presentModeCount, graphicDevice.presentModes.data());
+        }
+    }
+
     void VulkanRenderer::loadGraphicDevice(VulkanGraphicDevice & graphicDevice, VkPhysicalDevice physicalDevice)
     {
         graphicDevice.physicalDevice = physicalDevice;
@@ -500,24 +488,7 @@ namespace Flare
       
 
         // Query swapchain.
-        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, m_surface, &graphicDevice.surfaceCapabilities);
-
-        uint32_t formatCount = 0;
-        vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, m_surface, &formatCount, nullptr);
-        if (formatCount != 0)
-        {
-            graphicDevice.surfaceFormats.resize(formatCount);
-            vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, m_surface, &formatCount, graphicDevice.surfaceFormats.data());
-        }
-
-        uint32_t presentModeCount = 0;
-        vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, m_surface, &presentModeCount, nullptr);
-        if (presentModeCount != 0)
-        {
-            graphicDevice.presentModes.resize(presentModeCount);
-            vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, m_surface, &presentModeCount, graphicDevice.presentModes.data());
-        }
-
+        loadQuerySwapChainSupport(graphicDevice, physicalDevice);
     }
 
     void VulkanRenderer::loadScorePhysicalDevice(VkPhysicalDevice physicalDevice, uint32_t & score)
@@ -633,7 +604,7 @@ namespace Flare
         vkGetDeviceQueue(m_graphicDevice.logicalDevice, m_graphicDevice.presentFamily.value(), 0, &m_presentQueue);
     }
 
-    void VulkanRenderer::loadChooseSwapSurfaceFormat(/*const std::vector<VkSurfaceFormatKHR> & availableFormats*/)
+    void VulkanRenderer::loadChooseSwapSurfaceFormat()
     {
         if (m_graphicDevice.surfaceFormats.size() == 1 && m_graphicDevice.surfaceFormats[0].format == VK_FORMAT_UNDEFINED)
         {
@@ -694,6 +665,8 @@ namespace Flare
 
     void VulkanRenderer::loadCreateSwapChain()
     {
+        loadQuerySwapChainSupport(m_graphicDevice, m_graphicDevice.physicalDevice);
+
         loadChooseSwapSurfaceFormat();
         loadChooseSwapPresentMode();
         loadChooseSwapExtent();
@@ -1014,7 +987,6 @@ namespace Flare
         allocInfo.commandPool = m_commandPool;
         allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
         allocInfo.commandBufferCount = static_cast<uint32_t>(m_commandBuffers.size());
-
         if (vkAllocateCommandBuffers(m_graphicDevice.logicalDevice, &allocInfo, m_commandBuffers.data()) != VK_SUCCESS)
         {
             throw std::runtime_error("Failed to allocate command buffers.");
@@ -1061,8 +1033,18 @@ namespace Flare
         vkResetFences(m_graphicDevice.logicalDevice, 1, &m_inFlightFences[m_currentFrame]);
 
         uint32_t imageIndex;
-        vkAcquireNextImageKHR(m_graphicDevice.logicalDevice, m_swapChain, std::numeric_limits<uint64_t>::max(),
+        VkResult result = vkAcquireNextImageKHR(m_graphicDevice.logicalDevice, m_swapChain, std::numeric_limits<uint64_t>::max(),
             m_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, &imageIndex);
+
+        if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+            recreateSwapChain();
+            return;
+        }
+        else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+            throw std::runtime_error("failed to acquire swap chain image!");
+        }
+
+
 
         VkSubmitInfo submitInfo = {};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -1094,7 +1076,16 @@ namespace Flare
         presentInfo.pImageIndices = &imageIndex;
         presentInfo.pResults = nullptr;
 
-        vkQueuePresentKHR(m_presentQueue, &presentInfo);
+        result = vkQueuePresentKHR(m_presentQueue, &presentInfo);
+        if (result == VK_ERROR_OUT_OF_DATE_KHR)
+        {
+            recreateSwapChain();
+            return;
+        }
+        else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+            throw std::runtime_error("failed to acquire swap chain image!");
+        }
+
 
         m_currentFrame = (m_currentFrame + 1) % FLARE_MAX_FRAMES_IN_FLIGHT;
 
@@ -1122,6 +1113,71 @@ namespace Flare
                 throw std::runtime_error("Failed to create synchronization objects for a frame.");
             }
         }
+    }
+
+    void VulkanRenderer::unloadSwapChain()
+    {
+        if (m_graphicDevice.logicalDevice)
+        {
+            for (auto framebuffer : m_swapChainFramebuffers)
+            {
+                vkDestroyFramebuffer(m_graphicDevice.logicalDevice, framebuffer, nullptr);
+            }
+            m_swapChainFramebuffers.clear();
+
+            vkFreeCommandBuffers(m_graphicDevice.logicalDevice, m_commandPool, static_cast<uint32_t>(m_commandBuffers.size()), m_commandBuffers.data());
+            m_commandBuffers.clear();
+
+            if (m_graphicsPipeline)
+            {
+                vkDestroyPipeline(m_graphicDevice.logicalDevice, m_graphicsPipeline, nullptr);
+                m_graphicsPipeline = 0;
+            }
+
+            if (m_pipelineLayout)
+            {
+                vkDestroyPipelineLayout(m_graphicDevice.logicalDevice, m_pipelineLayout, nullptr);
+                m_pipelineLayout = 0;
+            }
+
+            if (m_renderPass)
+            {
+                vkDestroyRenderPass(m_graphicDevice.logicalDevice, m_renderPass, nullptr);
+                m_renderPass = 0;
+            }
+
+            for (auto & imageView : m_swapChainImageViews)
+            {
+                vkDestroyImageView(m_graphicDevice.logicalDevice, imageView, nullptr);
+            }
+            m_swapChainImageViews.clear();
+
+            if (m_swapChain)
+            {
+                vkDestroySwapchainKHR(m_graphicDevice.logicalDevice, m_swapChain, nullptr);
+                m_swapChain = 0;
+            }
+        }
+
+    }
+
+    void VulkanRenderer::recreateSwapChain() {
+        /*int width = 0, height = 0;
+        while (width == 0 || height == 0) {
+            glfwGetFramebufferSize(window, &width, &height);
+            glfwWaitEvents();
+        }*/
+
+        vkDeviceWaitIdle(m_graphicDevice.logicalDevice);
+
+        unloadSwapChain();
+
+        loadCreateSwapChain();
+        loadCreateImageViews();
+        loadCreateRenderPass();
+        loadCreateGraphicsPipeline();
+        loadCreateFramebuffers();
+        loadCreateCommandBuffers();
     }
 
 }
