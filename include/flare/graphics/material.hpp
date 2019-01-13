@@ -28,8 +28,11 @@
 
 #include "flare/build.hpp"
 #include "flare/math/vector.hpp"
-#include <set>
 #include <functional>
+#include <set>
+#include <map>
+#include <list>
+
 
 namespace Flare
 {
@@ -37,8 +40,11 @@ namespace Flare
     // Forward declarations.
     class Material;
     class MaterialNode;
+
     template<typename T> class MaterialMultVec4Vec4Node;
+    template<typename T> class MaterialMultVec4ScalarNode;
     template<typename T> class MaterialOutputPin;
+    template<typename T> class MaterialSingleOutputNode;
 
 
     /**
@@ -71,9 +77,19 @@ namespace Flare
     */
     enum class MaterialNodeType
     {
+        Scalar,
         Vec4,
         MultVec4Vec4,
+        MultVec4Scalar,
         Output
+    };
+
+    template <typename T>
+    struct GetDataType
+    {
+
+        static MaterialDataType value();
+
     };
 
 
@@ -193,13 +209,20 @@ namespace Flare
         * Connect this pin with an output pin.
         *
         */
-        void connect(MaterialOutputPin<T> * output);
+        void connect(MaterialOutputPin<T> & output);
 
         /**
         * Disconnect from any output pin.
         *
         */
         void disconnect();
+
+        /**
+        * Connect a node with this output node.
+        *
+        */
+        MaterialInputPin<T> & operator = (MaterialSingleOutputNode<T> & node);
+        MaterialInputPin<T> & operator = (MaterialOutputPin<T> & outputPin);
 
     private:
 
@@ -242,13 +265,13 @@ namespace Flare
         * Connect this pin with an input pin.
         *
         */
-        void connect(MaterialInputPin<T> * input);
+        void connect(MaterialInputPin<T> & input);
 
         /**
         * Disconnect from given input pin.
         *
         */
-        void disconnect(MaterialInputPin<T> * input);
+        void disconnect(MaterialInputPin<T> & input);
 
         /**
         * Disconnect from all input pins.
@@ -354,49 +377,129 @@ namespace Flare
 
     };
 
+
+    /**
+    * Vector4 node.
+    *
+    */
     template<typename T>
-    class Test : public MaterialSingleOutputNode<T>
+    class MaterialScalarNode : public MaterialSingleOutputNode<T>
     {
 
     public:
 
-        virtual MaterialNodeType getType() const
-        {
-            return MaterialNodeType::Vec4;
-        }
-
-        Test(Material & material) :
-            MaterialSingleOutputNode<T>(material, *this)
-        {
-            MaterialSingleOutputNode<T>::m_material.debugPrint();
-        }
-
-    };
-
-
-    template<typename T>
-    class MaterialVec4Node : public MaterialSingleOutputNode<Vector4<T>>
-    {
-
-    public:
-
+        /**
+        * Get node type.
+        *
+        */
         virtual MaterialNodeType getType() const;
 
-        MaterialInputPin<T> & getInputX();
-        MaterialInputPin<T> & getInputY();
-        MaterialInputPin<T> & getInputZ();
-        MaterialInputPin<T> & getInputW();
-
-        /*void test() {
-            
-        }*/
-
-        MaterialMultVec4Vec4Node<T> & operator *(MaterialVec4Node<T> & node);
+        /**
+        * Get X input pin.
+        *
+        */
+        MaterialInputPin<T> & getInput();
 
     private:
 
         friend class Material;
 
+        /**
+        * Constructor.
+        *
+        * @param material   Material passed by material class at creation.
+        * @param scalar     Setting default values to scalar for all elements.
+        *
+        */
+        MaterialScalarNode(Material & material);
+        MaterialScalarNode(Material & material, const T scalar);
+        ~MaterialScalarNode();
+
+        MaterialInputPin<T> m_input;
+
+    };
+
+    
+    /**
+    ** Base class for all nodes consisting of 1 data type.
+    *
+    */
+    class FLARE_API MaterialDataTypeNode
+    {
+
+    public:
+
+        /**
+        * Get data type.
+        *
+        */
+        virtual MaterialDataType getDataType() const = 0;
+
+    };
+
+
+    /**
+    * Vector4 node.
+    *
+    */
+    template<typename T>
+    class MaterialVec4Node : public MaterialDataTypeNode, public MaterialSingleOutputNode<Vector4<T>>
+    {
+
+    public:
+
+        virtual MaterialDataType getDataType() const;
+
+        /**
+        * Get node type.
+        *
+        */
+        virtual MaterialNodeType getType() const;
+
+        /**
+        * Get X input pin.
+        *
+        */
+        MaterialInputPin<T> & getInputX();
+
+        /**
+        * Get Y input pin.
+        *
+        */
+        MaterialInputPin<T> & getInputY();
+
+        /**
+        * Get Z input pin.
+        *
+        */
+        MaterialInputPin<T> & getInputZ();
+
+        /**
+        * Get W input pin.
+        *
+        */
+        MaterialInputPin<T> & getInputW();
+
+        /**
+        * Multiplication operator between nodes.
+        *
+        */
+        MaterialMultVec4ScalarNode<T> & operator *(MaterialOutputPin<T> & pin);
+        MaterialMultVec4ScalarNode<T> & operator *(MaterialSingleOutputNode<T> & node);
+        MaterialMultVec4Vec4Node<T> & operator *(MaterialOutputPin<Vector4<T>> & pin);
+        MaterialMultVec4Vec4Node<T> & operator *(MaterialSingleOutputNode<Vector4<T>> & node);
+
+    private:
+
+        friend class Material;
+
+        /**
+        * Constructor.
+        *
+        * @param material   Material passed by material class at creation.
+        * @param scalar     Setting default values to scalar for all elements.
+        *
+        */
         MaterialVec4Node(Material & material);
         MaterialVec4Node(Material & material, const T scalar);
         MaterialVec4Node(Material & material, const T x, const T y, const T z, const T w);
@@ -409,27 +512,85 @@ namespace Flare
         
     };
 
+
+    /**
+    * Node for vector4 multiplications.
+    *
+    */
     template<typename T>
-    class MaterialMultVec4Vec4Node : public MaterialSingleOutputNode<Vector4<T>>
+    class MaterialMultVec4Vec4Node : public MaterialDataTypeNode, public MaterialSingleOutputNode<Vector4<T>>
     {
 
     public:
+
+        /**
+        * Get data type.
+        *
+        */
+        virtual MaterialDataType getDataType() const;
 
         virtual MaterialNodeType getType() const;
 
         MaterialInputPin<Vector4<T>> & getInputA();
         MaterialInputPin<Vector4<T>> & getInputB();
 
+        /**
+        * Multiplication operator between nodes.
+        *
+        */
+        MaterialMultVec4ScalarNode<T> & operator *(MaterialOutputPin<T> & pin);
+        MaterialMultVec4ScalarNode<T> & operator *(MaterialSingleOutputNode<T> & node);
+        MaterialMultVec4Vec4Node<T> & operator *(MaterialOutputPin<Vector4<T>> & pin);
+        MaterialMultVec4Vec4Node<T> & operator *(MaterialSingleOutputNode<Vector4<T>> & node);
+
     private:
 
         friend class Material;
 
         MaterialMultVec4Vec4Node(Material & material);
-        MaterialMultVec4Vec4Node(Material & material, MaterialVec4Node<T> & nodeA, MaterialVec4Node<T> & nodeB);
+        MaterialMultVec4Vec4Node(Material & material, MaterialOutputPin<Vector4<T>> & pinA, MaterialOutputPin<Vector4<T>> & pinB);
         ~MaterialMultVec4Vec4Node();
 
         MaterialInputPin<Vector4<T>> m_inputA;
         MaterialInputPin<Vector4<T>> m_inputB;
+    };
+
+    /**
+    * Node for vector4 and scalar multiplications.
+    *
+    */
+    template<typename T>
+    class MaterialMultVec4ScalarNode : public MaterialDataTypeNode, public MaterialSingleOutputNode<Vector4<T>>
+    {
+
+    public:
+
+        /**
+        * Get data type.
+        *
+        */
+        virtual MaterialDataType getDataType() const;
+
+        virtual MaterialNodeType getType() const;
+
+        MaterialInputPin<Vector4<T>> & getInputA();
+        MaterialInputPin<T> & getInputB();
+
+        MaterialMultVec4ScalarNode<T> & operator *(MaterialOutputPin<T> & pin);
+        MaterialMultVec4ScalarNode<T> & operator *(MaterialSingleOutputNode<T> & node);
+        MaterialMultVec4Vec4Node<T> & operator *(MaterialOutputPin<Vector4<T>> & pin);
+        MaterialMultVec4Vec4Node<T> & operator *(MaterialSingleOutputNode<Vector4<T>> & node);
+
+    private:
+
+        friend class Material;
+
+        MaterialMultVec4ScalarNode(Material & material);
+        MaterialMultVec4ScalarNode(Material & material, MaterialOutputPin<Vector4<T>> & pinA, MaterialOutputPin<T> & pinB);
+        ~MaterialMultVec4ScalarNode();
+
+        MaterialInputPin<Vector4<T>> m_inputA;
+        MaterialInputPin<T> m_inputB;
     };
     
 
@@ -441,6 +602,12 @@ namespace Flare
     {
 
     public:
+
+        /**
+        * Get data type.
+        *
+        */
+        virtual MaterialDataType getDataType() const = 0;
 
         /**
         * Constructor.
@@ -478,6 +645,12 @@ namespace Flare
         virtual MaterialNodeType getType() const;
 
         /**
+        * Get data type.
+        *
+        */
+        virtual MaterialDataType getDataType() const;
+
+        /**
         * Get reference to input.
         *
         */
@@ -512,6 +685,56 @@ namespace Flare
         MaterialInputPin<T> m_input;
 
     };
+
+
+    /**
+    * Helper class, used for generating GLSL source code.
+    */
+    class FLARE_API MaterialGlslGenerator
+    {
+    public:
+
+        void run(const Material & material, std::string & source);
+
+    private:
+
+        void traverseOutputNodes(const std::list<MaterialOutputNodeBase *> & outputNodes);
+
+        void traverseNode(const MaterialNode & node);
+
+        template<MaterialNodeType NodeType>
+        void traverseNodeType(const MaterialNode & node);
+
+        template<MaterialDataType DataType, typename T>
+        void traverseDataType(const MaterialNode & node)
+        {
+
+        }
+
+        template<MaterialDataType DataType>
+        auto test();
+
+
+        std::string getVarAsString(MaterialDataType dataType);
+
+        std::map<std::string, const MaterialOutputNodeBase*> m_outputNodes;
+        std::set<const MaterialNode*> m_traversedNodes;
+
+    };
+
+    template<>
+    inline auto MaterialGlslGenerator::test<MaterialDataType::Float>()
+    {
+        float a = 1.0f;
+        return a;
+    }
+
+    template<>
+    inline auto MaterialGlslGenerator::test<MaterialDataType::Integer>()
+    {
+        int a = 1;
+        return a;
+    }
 
     /**
     * Material class.
@@ -558,16 +781,32 @@ namespace Flare
         *
         */
         template<typename T, typename ... Args>
-        MaterialVec4Node<T> & createVec4Node(Args ... args);
+        MaterialScalarNode<T> & createScalarNode(Args ... args);
 
         /**
         * @ see createOutputVec4Node
         *
         */
         template<typename T, typename ... Args>
-        MaterialMultVec4Vec4Node<T> & createMultVec4Vec4Node(Args ... args);
+        MaterialVec4Node<T> & createVec4Node(Args ... args);
+
+        /**
+        * @ see createOutputVec4Node
+        *
+        */
+       /* template<typename T, typename ... Args>
+        MaterialMultVec4Vec4Node<T> & createMultVec4Vec4Node(Args ... args);*/
         template<typename T>
-        MaterialMultVec4Vec4Node<T> & createMultVec4Vec4Node(MaterialVec4Node<T> & nodeA, MaterialVec4Node<T> & nodeB);
+        MaterialMultVec4Vec4Node<T> & createMultVec4Vec4Node(MaterialOutputPin<Vector4<T>> & pinA, MaterialOutputPin<Vector4<T>> & pinB);
+
+        /**
+        * @ see createOutputVec4Node
+        *
+        */
+        /*template<typename T, typename ... Args>
+        MaterialMultVec4ScalarNode<T> & createMultVec4ScalarNode(Args ... args);*/
+        template<typename T>
+        MaterialMultVec4ScalarNode<T> & createMultVec4ScalarNode(MaterialOutputPin<Vector4<T>> & pinA, MaterialOutputPin<T> & pinB);
 
         /**
         * Deletes passed node. Any reference to the node becomes invalid and all connections to the node are disconnected.
@@ -576,6 +815,10 @@ namespace Flare
         *
         */
         void deleteNode(MaterialNode & node);
+
+
+        const std::set<MaterialNode *> & getNodes() const;
+        const std::list<MaterialOutputNodeBase *> & getOutputNodes() const;
 
         /**
         * Passed function is called for every single node of this material, including output nodes.
@@ -597,12 +840,14 @@ namespace Flare
         */
         void debugPrint();
 
+        void generateGlsl(std::string & source);
+
     private:
 
         Material(const Material & copy) = delete;
 
         std::set<MaterialNode *> m_nodes;
-        std::set<MaterialOutputNodeBase *> m_outputNodes;
+        std::list<MaterialOutputNodeBase *> m_outputNodes;
 
     };
   

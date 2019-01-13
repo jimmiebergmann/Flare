@@ -26,6 +26,7 @@
 #include "flare/graphics/material.hpp"
 #include <iostream>
 
+
 namespace Flare
 {
 
@@ -52,6 +53,79 @@ namespace Flare
     { }
 
 
+    // Material GLSL generator implementations.
+    void MaterialGlslGenerator::run(const Material & material, std::string & source)
+    {
+        auto & outputNodes = material.getOutputNodes();
+        size_t outputNodeIndex = 1;
+        for (auto it = outputNodes.begin(); it != outputNodes.end(); it++)
+        {
+            const auto node = *it;
+            m_outputNodes.insert({ "out_" + std::to_string(outputNodeIndex), node });
+            outputNodeIndex++;
+        }
+
+        traverseOutputNodes(outputNodes);
+        
+
+        for (auto outputNode : m_outputNodes)
+        {
+            source += "out " + getVarAsString(outputNode.second->getDataType()) + " " + outputNode.first + ";\n";
+             
+        }
+        
+        source += "void main(void){\n";
+
+        source += "}\n";
+
+    }
+
+    void MaterialGlslGenerator::traverseOutputNodes(const std::list<MaterialOutputNodeBase *> & outputNodes)
+    {
+        for (const auto outputNode : outputNodes)
+        {
+            traverseNode(*outputNode);
+        }
+
+    }
+
+    void MaterialGlslGenerator::traverseNode(const MaterialNode & node)
+    {
+        switch (node.getType())
+        {
+            case MaterialNodeType::Scalar:          traverseNodeType<MaterialNodeType::Scalar>(node);           break;
+            case MaterialNodeType::Vec4:            traverseNodeType<MaterialNodeType::Vec4>(node);             break;
+            case MaterialNodeType::Output:          traverseNodeType<MaterialNodeType::Output>(node);           break;
+            case MaterialNodeType::MultVec4Vec4:    traverseNodeType<MaterialNodeType::MultVec4Vec4>(node);     break;
+            case MaterialNodeType::MultVec4Scalar:  traverseNodeType<MaterialNodeType::MultVec4Scalar>(node);   break;
+            default:                                throw std::runtime_error("Unknown material node type.");     break;
+        }
+    }
+
+
+    std::string MaterialGlslGenerator::getVarAsString(MaterialDataType dataType)
+    {
+        switch (dataType)
+        {
+            case MaterialDataType::Boolean:     return "bool";  break;
+            case MaterialDataType::Integer:     return "int";   break;
+            case MaterialDataType::Float:       return "float"; break;
+            case MaterialDataType::Vec2Boolean: return "bvec2"; break;
+            case MaterialDataType::Vec2Integer: return "ivec2"; break;
+            case MaterialDataType::Vec2Float:   return "vec2";  break;
+            case MaterialDataType::Vec3Boolean: return "bvec3"; break;
+            case MaterialDataType::Vec3Integer: return "ivec3"; break;
+            case MaterialDataType::Vec3Float:   return "vec3";  break;
+            case MaterialDataType::Vec4Boolean: return "bvec4"; break;
+            case MaterialDataType::Vec4Integer: return "ivec4"; break;
+            case MaterialDataType::Vec4Float:   return "vec4";  break;
+            default: break;
+        }
+        throw std::runtime_error("Could not getVarAsString");
+        return "";
+    }
+
+
     // Material implementations.
     Material::Material()
     { }
@@ -70,10 +144,25 @@ namespace Flare
         m_nodes.erase(pNode);
         if (node.getType() == MaterialNodeType::Output)
         {
-            m_outputNodes.erase(static_cast<MaterialOutputNodeBase*>(pNode));
+            auto outputNode = static_cast<MaterialOutputNodeBase*>(pNode);
+            auto it = std::find(m_outputNodes.begin(), m_outputNodes.end(), outputNode);
+            if (it != m_outputNodes.end())
+            {
+                m_outputNodes.erase(it);
+            }
         }
 
         delete pNode;
+    }
+
+    const std::set<MaterialNode *> & Material::getNodes() const
+    {
+        return m_nodes;
+    }
+
+    const std::list<MaterialOutputNodeBase *> & Material::getOutputNodes() const
+    {
+        return m_outputNodes;
     }
 
     void Material::forEachNode(std::function<void(MaterialNode &)> func)
@@ -100,6 +189,8 @@ namespace Flare
         {
             std::cout << std::string(level * 3, ' ') << "Output node: " << std::endl;
 
+            MaterialOutputNodeBase * pNodeBase = static_cast<MaterialOutputNodeBase*>(pNode);
+
             MaterialOutputNode<Vector4f> * pCastedNode = static_cast<MaterialOutputNode<Vector4f>*>(pNode);
             auto connection = pCastedNode->getInput().getConnection();
             if (connection)
@@ -107,6 +198,15 @@ namespace Flare
                 std::cout << std::string((level + 1) * 3, ' ') << "Input: ";
                 _debugPrintInput(&connection->getNode(), level + 1);
             }
+        }
+        break;
+        case MaterialNodeType::Scalar:
+        {
+            std::cout << std::string(level * 3, ' ') << "Vec4 node: (";
+
+            MaterialScalarNode<float> * pCastedNode = static_cast<MaterialScalarNode<float>*>(pNode);
+
+            std::cout << pCastedNode->getInput().getValue() << ")" << std::endl;
         }
         break;
         case MaterialNodeType::Vec4:
@@ -141,6 +241,26 @@ namespace Flare
             }
         }
         break;
+        case MaterialNodeType::MultVec4Scalar:
+        {
+            std::cout << std::string(level * 3, ' ') << "MultVec4Scalar node: " << std::endl;
+
+            MaterialMultVec4ScalarNode<float> * pCastedNode = static_cast<MaterialMultVec4ScalarNode<float>*>(pNode);
+
+            auto connectionA = pCastedNode->getInputA().getConnection();
+            auto connectionB = pCastedNode->getInputB().getConnection();
+            if (connectionA)
+            {
+                std::cout << std::string((level + 1) * 3, ' ') << "Input A: ";
+                _debugPrintInput(&connectionA->getNode(), level + 1);
+            }
+            if (connectionB)
+            {
+                std::cout << std::string((level + 1) * 3, ' ') << "Input B: ";
+                _debugPrintInput(&connectionB->getNode(), level + 1);
+            }
+        }
+        break;
         default:
             break;
         }
@@ -153,6 +273,12 @@ namespace Flare
         {
             _debugPrintInput(*it, 0);
         }
+    }
+
+    void Material::generateGlsl(std::string & source)
+    {
+        MaterialGlslGenerator generator;
+        generator.run(*this, source);
     }
 
 }

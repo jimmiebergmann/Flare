@@ -26,6 +26,69 @@
 namespace Flare
 {
 
+    // Get data type implementations.
+    template <>
+    inline MaterialDataType GetDataType<bool>::value()
+    {
+        return MaterialDataType::Boolean;
+    }
+    template <>
+    inline MaterialDataType GetDataType<int32_t>::value()
+    {
+        return MaterialDataType::Integer;
+    }
+    template <>
+    inline MaterialDataType GetDataType<float>::value()
+    {
+        return MaterialDataType::Float;
+    }
+    template <>
+    inline MaterialDataType GetDataType<Vector2b>::value()
+    {
+        return MaterialDataType::Vec2Boolean;
+    }
+    template <>
+    inline MaterialDataType GetDataType<Vector2i32>::value()
+    {
+        return MaterialDataType::Vec2Integer;
+    }
+    template <>
+    inline MaterialDataType GetDataType<Vector2f>::value()
+    {
+        return MaterialDataType::Vec2Float;
+    }
+    template <>
+    inline MaterialDataType GetDataType<Vector3b>::value()
+    {
+        return MaterialDataType::Vec3Boolean;
+    }
+    template <>
+    inline MaterialDataType GetDataType<Vector3i32>::value()
+    {
+        return MaterialDataType::Vec3Integer;
+    }
+    template <>
+    inline MaterialDataType GetDataType<Vector3f>::value()
+    {
+        return MaterialDataType::Vec3Float;
+    }
+    template <>
+    inline MaterialDataType GetDataType<Vector4b>::value()
+    {
+        return MaterialDataType::Vec4Boolean;
+    }
+    template <>
+    inline MaterialDataType GetDataType<Vector4i32>::value()
+    {
+        return MaterialDataType::Vec4Integer;
+    }
+    template <>
+    inline MaterialDataType GetDataType<Vector4f>::value()
+    {
+        return MaterialDataType::Vec4Float;
+    }
+
+
     // Material pin implementations.
     template<typename T>
     inline MaterialNode & MaterialPin<T>::getNode()
@@ -44,68 +107,10 @@ namespace Flare
         return m_name;
     }
 
-    template<>
-    inline MaterialDataType MaterialPin<bool>::getDataType() const
+    template<typename T>
+    inline MaterialDataType MaterialPin<T>::getDataType() const
     {
-        return MaterialDataType::Boolean;
-    }
-    template<>
-    inline MaterialDataType MaterialPin<int32_t>::getDataType() const
-    {
-        return MaterialDataType::Integer;
-    }
-    template<>
-    inline MaterialDataType MaterialPin<float>::getDataType() const
-    {
-        return MaterialDataType::Float;
-    }
-
-    template<>
-    inline MaterialDataType MaterialPin<Vector2b>::getDataType() const
-    {
-        return MaterialDataType::Vec2Boolean;
-    }
-    template<>
-    inline MaterialDataType MaterialPin<Vector2i32>::getDataType() const
-    {
-        return MaterialDataType::Vec2Integer;
-    }
-    template<>
-    inline MaterialDataType MaterialPin<Vector2f>::getDataType() const
-    {
-        return MaterialDataType::Vec2Float;
-    }
-
-    template<>
-    inline MaterialDataType MaterialPin<Vector3b>::getDataType() const
-    {
-        return MaterialDataType::Vec3Boolean;
-    }
-    template<>
-    inline MaterialDataType MaterialPin<Vector3i32>::getDataType() const
-    {
-        return MaterialDataType::Vec3Integer;
-    }
-    template<>
-    inline MaterialDataType MaterialPin<Vector3f>::getDataType() const
-    {
-        return MaterialDataType::Vec3Float;
-    }
-
-    template<>
-    inline MaterialDataType MaterialPin<Vector4b>::getDataType() const
-    {
-        return MaterialDataType::Vec4Boolean;
-    }
-    template<>
-    inline MaterialDataType MaterialPin<Vector4i32>::getDataType() const
-    {
-        return MaterialDataType::Vec4Integer;
-    }
-    template<>
-    inline MaterialDataType MaterialPin<Vector4f>::getDataType() const
-    {
-        return MaterialDataType::Vec4Float;
+        return GetDataType<T>::value();
     }
 
     template<typename T>
@@ -206,17 +211,12 @@ namespace Flare
     }
 
     template<typename T>
-    inline void MaterialInputPin<T>::connect(MaterialOutputPin<T> * output)
+    inline void MaterialInputPin<T>::connect(MaterialOutputPin<T> & output)
     {
-        if (output == nullptr)
-        {
-            return;
-        }
-
         disconnect();
-        m_connection = output;
+        m_connection = &output;
 
-        output->m_connections.insert(this);
+        output.m_connections.insert(this);
     }
 
     template<typename T>
@@ -229,6 +229,20 @@ namespace Flare
 
         m_connection->m_connections.erase(this);
         m_connection = nullptr;
+    }
+
+    template<typename T>
+    MaterialInputPin<T> & MaterialInputPin<T>::operator = (MaterialSingleOutputNode<T> & node)
+    {
+        connect(node.getOutput());
+        return *this;
+    }
+
+    template<typename T>
+    MaterialInputPin<T> & MaterialInputPin<T>::operator = (MaterialOutputPin<T> & outputPin)
+    {
+        connect(outputPin);
+        return *this;
     }
 
 
@@ -245,15 +259,23 @@ namespace Flare
     }
 
     template<typename T>
-    inline void MaterialOutputPin<T>::connect(MaterialInputPin<T> * input)
+    inline void MaterialOutputPin<T>::connect(MaterialInputPin<T> & input)
     {
-        input->connect(this);
+        input.connect(this);
     }
 
     template<typename T>
-    inline void MaterialOutputPin<T>::disconnect(MaterialInputPin<T> * input)
+    inline void MaterialOutputPin<T>::disconnect(MaterialInputPin<T> & input)
     {
-        input->disconnect(this);
+        auto it = m_connections.find(&input);
+        if (it == m_connections.end())
+        {
+            return;
+        }
+
+        auto connection = *it;
+        m_connections.erase(connection);
+        connection->m_connection = nullptr;
     }
 
     template<typename T>
@@ -261,8 +283,9 @@ namespace Flare
     {
         for (auto connection : m_connections)
         {
-            connection->disconnect();
+            connection->m_connection = nullptr;
         }
+        m_connections.clear();
     }
 
     
@@ -289,8 +312,46 @@ namespace Flare
         m_output(node, pinName)
     { }
 
+    
+    // Material scalar node implementations.
+    template <typename T>
+    MaterialNodeType MaterialScalarNode<T>::getType() const
+    {
+        return MaterialNodeType::Scalar;
+    }
+
+    template <typename T>
+    MaterialInputPin<T> & MaterialScalarNode<T>::getInput()
+    {
+        return m_input;
+    }
+
+    template <typename T>
+    MaterialScalarNode<T>::MaterialScalarNode(Material & material) :
+        MaterialSingleOutputNode<T>(material, *this),
+        m_input(*this, "value")
+    { }
+
+    template <typename T>
+    MaterialScalarNode<T>::MaterialScalarNode(Material & material, const T scalar) :
+        MaterialSingleOutputNode<T>(material, *this),
+        m_input(*this, "value", scalar)
+    { }
+
+    template <typename T>
+    MaterialScalarNode<T>::~MaterialScalarNode()
+    {
+        m_input.disconnect();
+    }
+
 
     // Material Vec4 node implementations.
+    template <typename T>
+    MaterialDataType MaterialVec4Node<T>::getDataType() const
+    {
+        return GetDataType<T>::value();
+    }
+
     template <typename T>
     inline MaterialNodeType MaterialVec4Node<T>::getType() const
     {
@@ -323,10 +384,31 @@ namespace Flare
     }
 
     template <typename T>
-    inline MaterialMultVec4Vec4Node<T> & MaterialVec4Node<T>::operator *(MaterialVec4Node<T> & node)
+    MaterialMultVec4ScalarNode<T> & MaterialVec4Node<T>::operator *(MaterialOutputPin<T> & pin)
     {
         Material & mat = MaterialSingleOutputNode<Vector4<T>>::m_material;
-        return mat.createMultVec4Vec4Node<T>(*this, node);
+        return mat.createMultVec4ScalarNode<T>(this->getOutput(), pin);
+    }
+
+    template <typename T>
+    MaterialMultVec4ScalarNode<T> & MaterialVec4Node<T>::operator *(MaterialSingleOutputNode<T> & node)
+    {
+        Material & mat = MaterialSingleOutputNode<Vector4<T>>::m_material;
+        return mat.createMultVec4ScalarNode<T>(this->getOutput(), node.getOutput());
+    }
+
+    template <typename T>
+    MaterialMultVec4Vec4Node<T> & MaterialVec4Node<T>::operator *(MaterialOutputPin<Vector4<T>> & pin)
+    {
+        Material & mat = MaterialSingleOutputNode<Vector4<T>>::m_material;
+        return mat.createMultVec4Vec4Node<T>(this->getOutput(), pin);
+    }
+
+    template <typename T>
+    MaterialMultVec4Vec4Node<T> & MaterialVec4Node<T>::operator *(MaterialSingleOutputNode<Vector4<T>> & node)
+    {
+        Material & mat = MaterialSingleOutputNode<Vector4<T>>::m_material;
+        return mat.createMultVec4Vec4Node<T>(this->getOutput(), node.getOutput());
     }
 
     template <typename T>
@@ -366,7 +448,13 @@ namespace Flare
     }
 
 
-    // material mult vec4-vec4 implementations.
+    // Material mult vec4-vec4 implementations.
+    template <typename T>
+    MaterialDataType MaterialMultVec4Vec4Node<T>::getDataType() const
+    {
+        return GetDataType<T>::value();
+    }
+
     template <typename T>
     inline MaterialNodeType MaterialMultVec4Vec4Node<T>::getType() const
     {
@@ -386,6 +474,34 @@ namespace Flare
     }
 
     template <typename T>
+    MaterialMultVec4ScalarNode<T> & MaterialMultVec4Vec4Node<T>::operator *(MaterialOutputPin<T> & pin)
+    {
+        Material & mat = MaterialSingleOutputNode<Vector4<T>>::m_material;
+        return mat.createMultVec4ScalarNode<T>(this->getOutput(), pin);
+    }
+
+    template <typename T>
+    MaterialMultVec4ScalarNode<T> & MaterialMultVec4Vec4Node<T>::operator *(MaterialSingleOutputNode<T> & node)
+    {
+        Material & mat = MaterialSingleOutputNode<Vector4<T>>::m_material;
+        return mat.createMultVec4ScalarNode<T>(this->getOutput(), node.getOutput());
+    }
+
+    template <typename T>
+    MaterialMultVec4Vec4Node<T> & MaterialMultVec4Vec4Node<T>::operator *(MaterialOutputPin<Vector4<T>> & pin)
+    {
+        Material & mat = MaterialSingleOutputNode<Vector4<T>>::m_material;
+        return mat.createMultVec4Vec4Node<T>(this->getOutput(), pin);
+    }
+
+    template <typename T>
+    MaterialMultVec4Vec4Node<T> & MaterialMultVec4Vec4Node<T>::operator *(MaterialSingleOutputNode<Vector4<T>> & node)
+    {
+        Material & mat = MaterialSingleOutputNode<Vector4<T>>::m_material;
+        return mat.createMultVec4Vec4Node<T>(this->getOutput(), node.getOutput());
+    }
+
+    template <typename T>
     inline MaterialMultVec4Vec4Node<T>::MaterialMultVec4Vec4Node(Material & material) :
         MaterialSingleOutputNode<Vector4<T>>(material, *this),
         m_inputA(*this, "a"),
@@ -393,15 +509,91 @@ namespace Flare
     { }
 
     template <typename T>
-    inline MaterialMultVec4Vec4Node<T>::MaterialMultVec4Vec4Node(Material & material, MaterialVec4Node<T> & nodeA, MaterialVec4Node<T> & nodeB) :
+    inline MaterialMultVec4Vec4Node<T>::MaterialMultVec4Vec4Node(Material & material, MaterialOutputPin<Vector4<T>> & pinA, MaterialOutputPin<Vector4<T>> & pinB) :
         MaterialMultVec4Vec4Node(material)
     {
-        m_inputA.connect(&(nodeA.getOutput()));
-        m_inputB.connect(&nodeB.getOutput());
+        m_inputA.connect(pinA);
+        m_inputB.connect(pinB);
     }
 
     template <typename T>
     inline MaterialMultVec4Vec4Node<T>::~MaterialMultVec4Vec4Node()
+    {
+        m_inputA.disconnect();
+        m_inputB.disconnect();
+    }
+
+
+    // Material mult vec4-scalar implementations.
+    template <typename T>
+    MaterialDataType MaterialMultVec4ScalarNode<T>::getDataType() const
+    {
+        return GetDataType<T>::value();
+    }
+
+    template <typename T>
+    MaterialNodeType MaterialMultVec4ScalarNode<T>::getType() const
+    {
+        return MaterialNodeType::MultVec4Scalar;
+    }
+
+    template <typename T>
+    MaterialInputPin<Vector4<T>> & MaterialMultVec4ScalarNode<T>::getInputA()
+    {
+        return m_inputA;
+    }
+
+    template <typename T>
+    MaterialInputPin<T> & MaterialMultVec4ScalarNode<T>::getInputB()
+    {
+        return m_inputB;
+    }
+
+    template <typename T>
+    MaterialMultVec4ScalarNode<T> & MaterialMultVec4ScalarNode<T>::operator *(MaterialOutputPin<T> & pin)
+    {
+        Material & mat = MaterialSingleOutputNode<Vector4<T>>::m_material;
+        return mat.createMultVec4ScalarNode<T>(this->getOutput(), pin);
+    }
+
+    template <typename T>
+    MaterialMultVec4ScalarNode<T> & MaterialMultVec4ScalarNode<T>::operator *(MaterialSingleOutputNode<T> & node)
+    {
+        Material & mat = MaterialSingleOutputNode<Vector4<T>>::m_material;
+        return mat.createMultVec4ScalarNode<T>(this->getOutput(), node.getOutput());
+    }
+
+    template <typename T>
+    MaterialMultVec4Vec4Node<T> & MaterialMultVec4ScalarNode<T>::operator *(MaterialOutputPin<Vector4<T>> & pin)
+    {
+        Material & mat = MaterialSingleOutputNode<Vector4<T>>::m_material;
+        return mat.createMultVec4Vec4Node<T>(this->getOutput(), pin);
+    }
+
+    template <typename T>
+    MaterialMultVec4Vec4Node<T> & MaterialMultVec4ScalarNode<T>::operator *(MaterialSingleOutputNode<Vector4<T>> & node)
+    {
+        Material & mat = MaterialSingleOutputNode<Vector4<T>>::m_material;
+        return mat.createMultVec4Vec4Node<T>(this->getOutput(), node.getOutput());
+    }
+
+    template <typename T>
+    MaterialMultVec4ScalarNode<T>::MaterialMultVec4ScalarNode(Material & material) :
+        MaterialSingleOutputNode<Vector4<T>>(material, *this),
+        m_inputA(*this, "a"),
+        m_inputB(*this, "b")
+    { }
+
+    template <typename T>
+    MaterialMultVec4ScalarNode<T>::MaterialMultVec4ScalarNode(Material & material, MaterialOutputPin<Vector4<T>> & pinA, MaterialOutputPin<T> & pinB) :
+        MaterialMultVec4ScalarNode(material)
+    {
+        m_inputA.connect(pinA);
+        m_inputB.connect(pinB);
+    }
+
+    template <typename T>
+    MaterialMultVec4ScalarNode<T>::~MaterialMultVec4ScalarNode()
     {
         m_inputA.disconnect();
         m_inputB.disconnect();
@@ -416,6 +608,13 @@ namespace Flare
     }
 
     template<typename T>
+    inline MaterialDataType MaterialOutputNode<T>::getDataType() const
+    {
+        return GetDataType<T>::value();
+    }
+
+
+    template<typename T>
     inline MaterialInputPin<T> & MaterialOutputNode<T>::getInput()
     {
         return m_input;
@@ -424,7 +623,7 @@ namespace Flare
     template<typename T>
     inline MaterialOutputNode<T> & MaterialOutputNode<T>::operator = (MaterialSingleOutputNode<T> & node)
     {
-        m_input.connect(&node.getOutput());
+        m_input.connect(node.getOutput());
         return *this;
     }
 
@@ -446,13 +645,49 @@ namespace Flare
     { }
 
 
+    // GLSL generator implementations.
+    template<>
+    inline void MaterialGlslGenerator::traverseNodeType<MaterialNodeType::Scalar>(const MaterialNode & node)
+    {
+
+    }
+    template<>
+    inline void MaterialGlslGenerator::traverseNodeType<MaterialNodeType::Vec4>(const MaterialNode & node)
+    {
+
+    }
+    template<>
+    inline void MaterialGlslGenerator::traverseNodeType<MaterialNodeType::MultVec4Vec4>(const MaterialNode & node)
+    {
+
+    }
+    template<>
+    inline void MaterialGlslGenerator::traverseNodeType<MaterialNodeType::MultVec4Scalar>(const MaterialNode & node)
+    {
+
+    }
+    template<>
+    inline void MaterialGlslGenerator::traverseNodeType<MaterialNodeType::Output>(const MaterialNode & node)
+    {
+        const MaterialOutputNodeBase * base = static_cast<const MaterialOutputNodeBase*>(&node);
+        //traverseDataType<
+    }
+
     // Material implementations.
     template<typename T, typename ... Args>
     inline MaterialOutputNode<T> & Material::createOutputNode(Args ... args)
     {
         auto node = new MaterialOutputNode<T>(*this, args...);
         m_nodes.insert(node);
-        m_outputNodes.insert(node);
+        m_outputNodes.push_back(node);
+        return *node;
+    }
+
+    template<typename T, typename ... Args>
+    inline MaterialScalarNode<T> & Material::createScalarNode(Args ... args)
+    {
+        auto node = new MaterialScalarNode<T>(*this, args...);
+        m_nodes.insert(node);
         return *node;
     }
 
@@ -464,18 +699,32 @@ namespace Flare
         return *node;
     }
 
-    template<typename T, typename ... Args>
+    /*template<typename T, typename ... Args>
     MaterialMultVec4Vec4Node<T> & Material::createMultVec4Vec4Node(Args ... args)
     {
         auto node = new MaterialMultVec4Vec4Node<T>(*this, args...);
         m_nodes.insert(node);
         return *node;
+    }*/
+    template<typename T>
+    inline MaterialMultVec4Vec4Node<T> & Material::createMultVec4Vec4Node(MaterialOutputPin<Vector4<T>> & pinA, MaterialOutputPin<Vector4<T>> & pinB)
+    {
+        auto node = new MaterialMultVec4Vec4Node<T>(*this, pinA, pinB);
+        m_nodes.insert(node);
+        return *node;
     }
 
-    template<typename T>
-    inline MaterialMultVec4Vec4Node<T> & Material::createMultVec4Vec4Node(MaterialVec4Node<T> & nodeA, MaterialVec4Node<T> & nodeB)
+    /*template<typename T, typename ... Args>
+    MaterialMultVec4ScalarNode<T> & Material::createMultVec4ScalarNode(Args ... args)
     {
-        auto node = new MaterialMultVec4Vec4Node<T>(*this, nodeA, nodeB);
+        auto node = new MaterialMultVec4ScalarNode<T>(*this, args...);
+        m_nodes.insert(node);
+        return *node;
+    }*/
+    template<typename T>
+    MaterialMultVec4ScalarNode<T> & Material::createMultVec4ScalarNode(MaterialOutputPin<Vector4<T>> & pinA, MaterialOutputPin<T> & pinB)
+    {
+        auto node = new MaterialMultVec4ScalarNode<T>(*this, pinA, pinB);
         m_nodes.insert(node);
         return *node;
     }

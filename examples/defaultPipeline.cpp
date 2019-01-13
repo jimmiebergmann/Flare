@@ -25,6 +25,7 @@
 
 #include <iostream>
 #include "flare/flare.hpp"
+#include <chrono>
 
 int main(int argc, char ** argv)
 {
@@ -50,26 +51,28 @@ int main(int argc, char ** argv)
     Flare::Material mat;
 
 
+    /*std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
 
+    for (size_t i = 0; i < 10000; i++)
+    {*/
+        auto & out = mat.createOutputNode<Flare::Vector4f>(1.0f);
+        out = (mat.createVec4Node<float>(1.0f, 2.0f, 3.0f, 4.0f) * mat.createScalarNode<float>(10.0f)) * mat.createVec4Node<float>(5.0f, 6.0f, 7.0f, 8.0f);
 
-    auto & out = mat.createOutputNode<Flare::Vector4f>(1.0f);
-    out = mat.createVec4Node<float>(1.0f, 2.0f, 3.0f, 4.0f) * mat.createVec4Node<float>(5.0f, 6.0f, 7.0f, 8.0f);
+        auto & out2 = mat.createOutputNode<Flare::Vector4i32>(1.0f) = mat.createVec4Node<int32_t>(11, 22, 33, 44);
 
+   /* }
 
-    /*Flare::MaterialNode & node = out;
-    mat.deleteNode(out);
-
-    //mat.deleteNode(*out.getInput().getConnection()->getParent());
-
-    auto & mult = mat.createMultVec4Vec4Node();
+    std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+    std::cout << "It took me " << time_span.count() << " seconds.";
     */
-    mat.debugPrint();
-
-    /*mat.forEachNode([](Flare::MaterialNode & node)
-    {
-        std::cout << "Type: " << (int)node.getType() << std::endl;
-    });*/
-
+    //mat.debugPrint();
+    std::cout << std::endl << "-------------------------------------------" << std::endl << std::endl;
+    
+    std::string glslSource = "";
+    mat.generateGlsl(glslSource);
+    std::cout << glslSource << std::endl;
+    
   
 
     //vec4->getInputX()->disconnect(a);
