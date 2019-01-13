@@ -39,6 +39,7 @@ namespace Flare
     public:
 
         Vector2();
+        Vector2(const T scalar);
         Vector2(const T x, const T y);
         Vector2(const Vector2<T> & vector);
         template<typename U>
@@ -90,6 +91,7 @@ namespace Flare
     public:
 
         Vector3();
+        Vector3(const T scalar);
         Vector3(const T x, const T y, const T z);
         Vector3(const Vector3<T> & vector);
         template<typename U>
@@ -143,6 +145,7 @@ namespace Flare
     public:
 
         Vector4();
+        Vector4(const T scalar);
         Vector4(const T x, const T y, const T z, const T w);
         Vector4(const Vector4<T> & vector);
         template<typename U>
@@ -189,6 +192,7 @@ namespace Flare
 
     };
 
+    typedef Vector2<bool>       Vector2b;
     typedef Vector2<float>      Vector2f;
     typedef Vector2<double>     Vector2d;
     typedef Vector2<int32_t>    Vector2i32;
@@ -196,6 +200,7 @@ namespace Flare
     typedef Vector2<int64_t>    Vector2i64;
     typedef Vector2<uint64_t>   Vector2ui64;
 
+    typedef Vector3<bool>       Vector3b;
     typedef Vector3<float>      Vector3f;
     typedef Vector3<double>     Vector3d;
     typedef Vector3<int32_t>    Vector3i32;
@@ -203,6 +208,7 @@ namespace Flare
     typedef Vector3<int64_t>    Vector3i64;
     typedef Vector3<uint64_t>   Vector3ui64;
     
+    typedef Vector4<bool>       Vector4b;
     typedef Vector4<float>      Vector4f;
     typedef Vector4<double>     Vector4d;
     typedef Vector4<int32_t>    Vector4i32;

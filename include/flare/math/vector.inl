@@ -32,6 +32,12 @@ namespace Flare
     { }
 
     template<typename T>
+    Vector2<T>::Vector2(const T scalar) :
+        x(scalar),
+        y(scalar)
+    { }
+
+    template<typename T>
     Vector2<T>::Vector2(const T p_x, const T p_y) :
         x(p_x),
         y(p_y)
@@ -204,6 +210,13 @@ namespace Flare
     // Vector 3 implementation.
     template<typename T>
     Vector3<T>::Vector3()
+    { }
+
+    template<typename T>
+    Vector3<T>::Vector3(const T scalar) :
+        x(scalar),
+        y(scalar),
+        z(scalar)
     { }
 
     template<typename T>
@@ -399,6 +412,14 @@ namespace Flare
     // Vector 4 implementation.
     template<typename T>
     Vector4<T>::Vector4()
+    { }
+
+    template<typename T>
+    Vector4<T>::Vector4(const T scalar) :
+        x(scalar),
+        y(scalar),
+        z(scalar),
+        w(scalar)
     { }
 
     template<typename T>

@@ -23,23 +23,12 @@
 *
 */
 
-#ifndef FLARE_HEADERS_HPP
-#define FLARE_HEADERS_HPP
+#include "flare/system/virtualScript/virtualScriptNode.hpp"
 
-#include "build.hpp"
+namespace Flare
+{
 
-#if defined(FLARE_VULKAN)
-#include "flare/graphics/vulkan/vulkanRenderer.hpp"
-#include "flare/graphics/vulkan/vulkanTexture.hpp"
-#endif
+    VirtualScriptNode::~VirtualScriptNode()
+    { }
 
-#include "flare/graphics/scene.hpp"
-#include "flare/graphics/material.hpp"
-
-#include "flare/window/window.hpp"
-#include "flare/math/vector.hpp"
-#include "flare/math/matrix.hpp"
-
-
-
-#endif
+}

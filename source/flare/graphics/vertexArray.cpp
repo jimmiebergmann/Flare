@@ -23,23 +23,16 @@
 *
 */
 
-#ifndef FLARE_HEADERS_HPP
-#define FLARE_HEADERS_HPP
+#include "flare/graphics/vertexArray.hpp"
 
-#include "build.hpp"
+namespace Flare
+{
 
-#if defined(FLARE_VULKAN)
-#include "flare/graphics/vulkan/vulkanRenderer.hpp"
-#include "flare/graphics/vulkan/vulkanTexture.hpp"
-#endif
+    VertexArray::VertexArray(RenderMemoryAllocator & allocator) :
+        RenderMemoryAllocator::Object<RenderObjectType::VertexArray>(allocator)
+    { }
 
-#include "flare/graphics/scene.hpp"
-#include "flare/graphics/material.hpp"
+    VertexArray::~VertexArray()
+    { }
 
-#include "flare/window/window.hpp"
-#include "flare/math/vector.hpp"
-#include "flare/math/matrix.hpp"
-
-
-
-#endif
+}

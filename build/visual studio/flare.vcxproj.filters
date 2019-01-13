@@ -51,6 +51,39 @@
     <ClInclude Include="..\..\include\flare\window\windowProxy.hpp">
       <Filter>window</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\flare\graphics\vulkan\vulkanVertexArray.hpp">
+      <Filter>graphics\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\flare\graphics\vulkan\vulkanVertexBuffer.hpp">
+      <Filter>graphics\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\flare\graphics\material.hpp">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\flare\graphics\model.hpp">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\flare\graphics\scene.hpp">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\flare\graphics\vertexArray.hpp">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\flare\graphics\vertexBuffer.hpp">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vendor\tinyobjloader\tiny_obj_loader.h">
+      <Filter>vendor\tinyobjloader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\flare\system\virtualScript\virtualScript.hpp">
+      <Filter>system\virtualScript</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\flare\system\virtualScript\virtualScriptNode.hpp">
+      <Filter>system\virtualScript</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\flare\graphics\materialNode.hpp">
+      <Filter>graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">
@@ -73,6 +106,15 @@
     </Filter>
     <Filter Include="system">
       <UniqueIdentifier>{f94c1943-1699-4bdd-8591-f2aabbf6b6ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor">
+      <UniqueIdentifier>{007d9778-2f39-4915-9724-d1eddced024d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\tinyobjloader">
+      <UniqueIdentifier>{57a3f404-b354-49da-9ee6-cfd26dc01299}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system\virtualScript">
+      <UniqueIdentifier>{f3ddccf6-bc63-416e-868b-bf79e81cd5b9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +145,39 @@
     <ClCompile Include="..\..\source\flare\graphics\vulkan\vulkanCleaner.cpp">
       <Filter>graphics\vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\flare\graphics\vulkan\vulkanVertexArray.cpp">
+      <Filter>graphics\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\flare\graphics\vulkan\vulkanVertexBuffer.cpp">
+      <Filter>graphics\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\flare\graphics\material.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\flare\graphics\model.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\flare\graphics\scene.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\flare\graphics\vertexArray.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\flare\graphics\vertexBuffer.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vendor\tinyobjloader\tiny_obj_loader.cc">
+      <Filter>vendor\tinyobjloader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\flare\system\virtualScript\virtualScript.cpp">
+      <Filter>system\virtualScript</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\flare\system\virtualScript\virtualScriptNode.cpp">
+      <Filter>system\virtualScript</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\flare\graphics\materialNode.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\include\flare\math\vector.inl">
@@ -119,6 +194,9 @@
     </None>
     <None Include="..\..\include\flare\window\windowProxy.inl">
       <Filter>window</Filter>
+    </None>
+    <None Include="..\..\include\flare\graphics\material.inl">
+      <Filter>graphics</Filter>
     </None>
   </ItemGroup>
 </Project>

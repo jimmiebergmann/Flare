@@ -56,7 +56,6 @@ namespace Flare
 
         virtual void load(const RendererSettings & settings);
         virtual void unload();
-        virtual void update();
         virtual void render();
         virtual void resize(const Vector2ui32 & size);
 

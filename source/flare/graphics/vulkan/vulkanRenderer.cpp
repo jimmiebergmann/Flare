@@ -169,10 +169,6 @@ namespace Flare
         }
     }
 
-    void VulkanRenderer::update()
-    {
-    }
-
     void VulkanRenderer::render()
     {
         loadDrawFrame();

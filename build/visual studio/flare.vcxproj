@@ -124,57 +124,57 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'">
-    <IncludePath>..\..\include;$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\include;..\..\vendor;$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
     <OutDir>..\..\lib\</OutDir>
     <IntDir>..\..\obj\flare\windows\x86\static\debug\</IntDir>
     <TargetName>flare-x86-sd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Debug|Win32'">
-    <IncludePath>..\..\include;$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\include;..\..\vendor;$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
     <OutDir>..\..\lib\</OutDir>
-    <IntDir>..\..\obj\flare\windows\x86\debug\</IntDir>
+    <IntDir>..\..\obj\flare\windows\x86\dynamic\debug\</IntDir>
     <TargetName>flare-x86-d</TargetName>
     <TargetExt>.dll</TargetExt>
     <LibraryPath>$(VULKAN_SDK)\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'">
-    <IncludePath>..\..\include;$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\include;..\..\vendor;$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
     <OutDir>..\..\lib\</OutDir>
     <IntDir>..\..\obj\flare\windows\x86\static\release\</IntDir>
     <TargetName>flare-x86-s</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Release|Win32'">
-    <IncludePath>..\..\include;$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\include;..\..\vendor;$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
     <OutDir>..\..\lib\</OutDir>
-    <IntDir>..\..\obj\flare\windows\x86\release\</IntDir>
+    <IntDir>..\..\obj\flare\windows\x86\dynamic\release\</IntDir>
     <TargetName>flare-x86</TargetName>
     <TargetExt>.dll</TargetExt>
     <LibraryPath>$(VULKAN_SDK)\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'">
-    <IncludePath>..\..\include;$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\include;..\..\vendor;$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
     <OutDir>..\..\lib\</OutDir>
     <IntDir>..\..\obj\flare\windows\x64\static\debug\</IntDir>
     <TargetName>flare-x64-sd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Debug|x64'">
-    <IncludePath>..\..\include;$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\include;..\..\vendor;$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
     <OutDir>..\..\lib\</OutDir>
-    <IntDir>..\..\obj\flare\windows\x64\debug\</IntDir>
+    <IntDir>..\..\obj\flare\windows\x64\dynamic\debug\</IntDir>
     <TargetName>flare-x64-d</TargetName>
     <TargetExt>.dll</TargetExt>
     <LibraryPath>$(VULKAN_SDK)\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'">
-    <IncludePath>..\..\include;$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\include;..\..\vendor;$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
     <OutDir>..\..\lib\</OutDir>
     <IntDir>..\..\obj\flare\windows\x64\static\release\</IntDir>
     <TargetName>flare-x64-s</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic Release|x64'">
-    <IncludePath>..\..\include;$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\include;..\..\vendor;$(VULKAN_SDK)\Include;$(IncludePath)</IncludePath>
     <OutDir>..\..\lib\</OutDir>
-    <IntDir>..\..\obj\flare\windows\x64\release\</IntDir>
+    <IntDir>..\..\obj\flare\windows\x64\dynamic\release\</IntDir>
     <TargetName>flare-x64</TargetName>
     <TargetExt>.dll</TargetExt>
     <LibraryPath>$(VULKAN_SDK)\Lib;$(LibraryPath)</LibraryPath>
@@ -326,35 +326,58 @@ copy /V ..\..\lib\$(targetname).dll ..\..\bin\$(targetname).dll</Command>
   <ItemGroup>
     <ClInclude Include="..\..\include\flare\build.hpp" />
     <ClInclude Include="..\..\include\flare\flare.hpp" />
+    <ClInclude Include="..\..\include\flare\graphics\material.hpp" />
+    <ClInclude Include="..\..\include\flare\graphics\materialNode.hpp" />
+    <ClInclude Include="..\..\include\flare\graphics\model.hpp" />
     <ClInclude Include="..\..\include\flare\graphics\pipeline.hpp" />
     <ClInclude Include="..\..\include\flare\graphics\renderer.hpp" />
+    <ClInclude Include="..\..\include\flare\graphics\scene.hpp" />
     <ClInclude Include="..\..\include\flare\graphics\subpass.hpp" />
     <ClInclude Include="..\..\include\flare\graphics\texture.hpp" />
+    <ClInclude Include="..\..\include\flare\graphics\vertexArray.hpp" />
+    <ClInclude Include="..\..\include\flare\graphics\vertexBuffer.hpp" />
     <ClInclude Include="..\..\include\flare\graphics\vulkan\vulkanCleaner.hpp" />
     <ClInclude Include="..\..\include\flare\graphics\vulkan\vulkanRenderer.hpp" />
     <ClInclude Include="..\..\include\flare\graphics\vulkan\vulkanTexture.hpp" />
+    <ClInclude Include="..\..\include\flare\graphics\vulkan\vulkanVertexArray.hpp" />
+    <ClInclude Include="..\..\include\flare\graphics\vulkan\vulkanVertexBuffer.hpp" />
     <ClInclude Include="..\..\include\flare\math\matrix.hpp" />
     <ClInclude Include="..\..\include\flare\math\vector.hpp" />
     <ClInclude Include="..\..\include\flare\platform\win32Headers.hpp" />
     <ClInclude Include="..\..\include\flare\system\memoryAllocator.hpp" />
     <ClInclude Include="..\..\include\flare\system\semaphore.hpp" />
+    <ClInclude Include="..\..\include\flare\system\virtualScript\virtualScript.hpp" />
+    <ClInclude Include="..\..\include\flare\system\virtualScript\virtualScriptNode.hpp" />
     <ClInclude Include="..\..\include\flare\window\private\win32Window.hpp" />
     <ClInclude Include="..\..\include\flare\window\private\windowBase.hpp" />
     <ClInclude Include="..\..\include\flare\window\window.hpp" />
     <ClInclude Include="..\..\include\flare\window\windowProxy.hpp" />
+    <ClInclude Include="..\..\vendor\tinyobjloader\tiny_obj_loader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\source\flare\graphics\material.cpp" />
+    <ClCompile Include="..\..\source\flare\graphics\materialNode.cpp" />
+    <ClCompile Include="..\..\source\flare\graphics\model.cpp" />
     <ClCompile Include="..\..\source\flare\graphics\pipeline.cpp" />
     <ClCompile Include="..\..\source\flare\graphics\renderer.cpp" />
+    <ClCompile Include="..\..\source\flare\graphics\scene.cpp" />
     <ClCompile Include="..\..\source\flare\graphics\subpass.cpp" />
     <ClCompile Include="..\..\source\flare\graphics\texture.cpp" />
+    <ClCompile Include="..\..\source\flare\graphics\vertexArray.cpp" />
+    <ClCompile Include="..\..\source\flare\graphics\vertexBuffer.cpp" />
     <ClCompile Include="..\..\source\flare\graphics\vulkan\vulkanCleaner.cpp" />
     <ClCompile Include="..\..\source\flare\graphics\vulkan\vulkanRenderer.cpp" />
     <ClCompile Include="..\..\source\flare\graphics\vulkan\vulkanTexture.cpp" />
+    <ClCompile Include="..\..\source\flare\graphics\vulkan\vulkanVertexArray.cpp" />
+    <ClCompile Include="..\..\source\flare\graphics\vulkan\vulkanVertexBuffer.cpp" />
+    <ClCompile Include="..\..\source\flare\system\virtualScript\virtualScript.cpp" />
+    <ClCompile Include="..\..\source\flare\system\virtualScript\virtualScriptNode.cpp" />
     <ClCompile Include="..\..\source\flare\window\private\win32Window.cpp" />
     <ClCompile Include="..\..\source\flare\window\private\windowBase.cpp" />
+    <ClCompile Include="..\..\vendor\tinyobjloader\tiny_obj_loader.cc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\include\flare\graphics\material.inl" />
     <None Include="..\..\include\flare\math\matrix.inl" />
     <None Include="..\..\include\flare\math\vector.inl" />
     <None Include="..\..\include\flare\system\memoryAllocator.inl" />

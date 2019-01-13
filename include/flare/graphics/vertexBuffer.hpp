@@ -23,23 +23,32 @@
 *
 */
 
-#ifndef FLARE_HEADERS_HPP
-#define FLARE_HEADERS_HPP
+#ifndef FLARE_GRAPHICS_VERTEX_BUFFER_HPP
+#define FLARE_GRAPHICS_VERTEX_BUFFER_HPP
 
-#include "build.hpp"
-
-#if defined(FLARE_VULKAN)
-#include "flare/graphics/vulkan/vulkanRenderer.hpp"
-#include "flare/graphics/vulkan/vulkanTexture.hpp"
-#endif
-
-#include "flare/graphics/scene.hpp"
-#include "flare/graphics/material.hpp"
-
-#include "flare/window/window.hpp"
+#include "flare/build.hpp"
+#include "flare/graphics/renderer.hpp"
 #include "flare/math/vector.hpp"
-#include "flare/math/matrix.hpp"
+#include "flare/system/memoryAllocator.hpp"
 
+namespace Flare
+{
 
+    class FLARE_API VertexBuffer : public RenderMemoryAllocator::Object<RenderObjectType::VertexBuffer>, public RenderObject
+    {
+
+    public:
+
+        VertexBuffer(RenderMemoryAllocator & allocator);
+
+        virtual ~VertexBuffer();
+
+    private:
+
+        VertexBuffer(const VertexBuffer &) = delete;
+
+    };
+
+}
 
 #endif

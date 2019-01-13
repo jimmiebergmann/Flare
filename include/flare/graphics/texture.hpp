@@ -66,10 +66,6 @@ namespace Flare
 
         virtual Vector2ui32 getSize() const = 0;
 
-    protected:
-
-        
-
     private:
 
         Texture(const Texture &) = delete;

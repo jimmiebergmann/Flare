@@ -23,23 +23,32 @@
 *
 */
 
-#ifndef FLARE_HEADERS_HPP
-#define FLARE_HEADERS_HPP
+#ifndef FLARE_GRAPHICS_SCENE_HPP
+#define FLARE_GRAPHICS_SCENE_HPP
 
-#include "build.hpp"
+#include "flare/build.hpp"
+#include "flare/graphics/renderer.hpp"
+#include <string>
 
-#if defined(FLARE_VULKAN)
-#include "flare/graphics/vulkan/vulkanRenderer.hpp"
-#include "flare/graphics/vulkan/vulkanTexture.hpp"
-#endif
+namespace Flare
+{
 
-#include "flare/graphics/scene.hpp"
-#include "flare/graphics/material.hpp"
+    class FLARE_API Scene
+    {
 
-#include "flare/window/window.hpp"
-#include "flare/math/vector.hpp"
-#include "flare/math/matrix.hpp"
+    public:
 
+        Scene();
+        ~Scene();
 
+        void load(const std::string & filename);
+
+    private:
+
+        Scene(const Scene &) = delete;
+
+    };
+
+}
 
 #endif

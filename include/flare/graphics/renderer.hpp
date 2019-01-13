@@ -72,6 +72,7 @@ namespace Flare
         std::vector<std::string> m_arguments;
         bool m_debug;
         float m_frameRate;
+
         // Window configurations.
         Window * m_pWindow;
         WindowProxy m_windowProxy;
@@ -93,7 +94,9 @@ namespace Flare
         Texture,
         Framebuffer,
         Shader,
-        ShaderProgram
+        ShaderProgram,
+        VertexArray,
+        VertexBuffer,
     };
 
     typedef RamMemoryAllocator<RenderObjectType, 4> RenderMemoryAllocator;
@@ -109,7 +112,6 @@ namespace Flare
 
         virtual void load(const RendererSettings & settings) = 0;
         virtual void unload() = 0;
-        virtual void update() = 0;
         virtual void render() = 0;
         virtual void resize(const Vector2ui32 & size) = 0;
 

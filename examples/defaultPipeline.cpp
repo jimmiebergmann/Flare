@@ -28,19 +28,58 @@
 
 int main(int argc, char ** argv)
 {
-    Flare::Window window({ 800, 600 }, "Flare - Default pipeline example.");
+    /*Flare::Window window({ 800, 600 }, "Flare - Default pipeline example.");
 
     Flare::RendererSettings settings;
     settings.setWindow(&window);
 
-    auto renderer = std::make_unique<Flare::VulkanRenderer>(settings);
+    std::unique_ptr<Flare::Renderer> renderer = std::make_unique<Flare::VulkanRenderer>(settings);
+    
+    //Flare::Scene scene;
+    //scene.load("sponza.obj");
+
 
     window.show();
     while (window.update())
     {
-        renderer->update();
         renderer->render();
-    }
- 
+    }*/
+
+    
+
+    Flare::Material mat;
+
+
+
+
+    auto & out = mat.createOutputNode<Flare::Vector4f>(1.0f);
+    out = mat.createVec4Node<float>(1.0f, 2.0f, 3.0f, 4.0f) * mat.createVec4Node<float>(5.0f, 6.0f, 7.0f, 8.0f);
+
+
+    /*Flare::MaterialNode & node = out;
+    mat.deleteNode(out);
+
+    //mat.deleteNode(*out.getInput().getConnection()->getParent());
+
+    auto & mult = mat.createMultVec4Vec4Node();
+    */
+    mat.debugPrint();
+
+    /*mat.forEachNode([](Flare::MaterialNode & node)
+    {
+        std::cout << "Type: " << (int)node.getType() << std::endl;
+    });*/
+
+  
+
+    //vec4->getInputX()->disconnect(a);
+
+   // auto output = material.createOutputNode("output");
+
+    /*output =*/ //Flare::Material::Vec3("name", 1.0f, 0.0f, 0.0f) * (Flare::Material::Texture2D("texture") = Flare::Material::Texture2DCoords("texture_coord"));
+
+    /*output =*/ //(material.createTexture2DNode("texture") = material.createTexture2DCoordsNode("texture_coord")) * material.createVec4Node("name", 1.0f, 0.0f, 0.0f, 1.0f);
+
+   
     return EXIT_SUCCESS;
 }

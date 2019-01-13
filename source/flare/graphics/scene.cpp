@@ -23,23 +23,50 @@
 *
 */
 
-#ifndef FLARE_HEADERS_HPP
-#define FLARE_HEADERS_HPP
-
-#include "build.hpp"
-
-#if defined(FLARE_VULKAN)
-#include "flare/graphics/vulkan/vulkanRenderer.hpp"
-#include "flare/graphics/vulkan/vulkanTexture.hpp"
-#endif
-
 #include "flare/graphics/scene.hpp"
-#include "flare/graphics/material.hpp"
+#include "tinyobjloader/tiny_obj_loader.h"
+#include <algorithm>
 
-#include "flare/window/window.hpp"
-#include "flare/math/vector.hpp"
-#include "flare/math/matrix.hpp"
+namespace Flare
+{
+
+    static void GetFileDirectory(const std::string & path, std::string & directory);
+
+    Scene::Scene()
+    { }
+
+    Scene::~Scene()
+    { }
+
+    void Scene::load(const std::string & filename)
+    {
+        tinyobj::attrib_t attrib;
+        std::vector<tinyobj::shape_t> shapes;
+        std::vector<tinyobj::material_t> materials;
+
+        std::string directory;
+        GetFileDirectory(filename, directory);
+
+        std::string warn;
+        std::string err;
+        bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err,
+            filename.c_str(), directory.c_str(), true);
+
+        int foo = 5;
+    }
+
+    void GetFileDirectory(const std::string & path, std::string & directory)
+    {
+        auto pos = path.find_last_of("/\\");
+        if (pos == 0 || pos == std::string::npos)
+        {
+            directory = "";
+        }
+        else
+        {
+            directory = path.substr(0, pos);
+        }
+    }
 
 
-
-#endif
+}
