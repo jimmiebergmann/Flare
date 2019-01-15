@@ -56,7 +56,11 @@ int main(int argc, char ** argv)
     for (size_t i = 0; i < 10000; i++)
     {*/
         auto & out = mat.createOutputNode<Flare::Vector4f>(1.0f);
-        out = (mat.createVec4Node<float>(1.0f, 2.0f, 3.0f, 4.0f) * mat.createScalarNode<float>(10.0f)) * mat.createVec4Node<float>(5.0f, 6.0f, 7.0f, 8.0f);
+        out = (mat.createVec4Node<float>(1.0f, 2.0f, 3.0f, 4.0f) * mat.createVec4Node<float>(5.0f, 6.0f, 7.0f, 8.0f)) /** mat.createScalarNode<float>(10.0f)*/;
+
+
+        auto & node = out.getInput().getConnection()->getNode();
+        auto nod2 = reinterpret_cast<Flare::MaterialMultVec4Vec4Node<float>*>(&node);
 
         auto & out2 = mat.createOutputNode<Flare::Vector4i32>(1.0f) = mat.createVec4Node<int32_t>(11, 22, 33, 44);
 

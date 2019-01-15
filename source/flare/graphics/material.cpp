@@ -30,6 +30,54 @@
 namespace Flare
 {
 
+    // Material pin base implementations.
+    MaterialPinBase::~MaterialPinBase()
+    { }
+
+
+    // Material pin implementations.
+    MaterialPin::~MaterialPin()
+    { }
+
+    MaterialNode & MaterialPin::getNode()
+    {
+        return m_node;
+    }
+
+    const MaterialNode & MaterialPin::getNode() const
+    {
+        return m_node;
+    }
+
+    const std::string & MaterialPin::getName() const
+    {
+        return m_name;
+    }
+
+    MaterialPin::MaterialPin(MaterialNode & node, const std::string & name) :
+        m_node(node),
+        m_name(name)
+    { }
+
+
+    // Material input pin base implementations.
+    MaterialInputPinBase::~MaterialInputPinBase()
+    { }
+
+    MaterialInputPinBase::MaterialInputPinBase(MaterialNode & node, const std::string & name) :
+        MaterialPin(node, name)
+    { }
+
+
+    // Material out pin base implementations.
+    MaterialOutputPinBase::~MaterialOutputPinBase()
+    { }
+
+    MaterialOutputPinBase::MaterialOutputPinBase(MaterialNode & node, const std::string & name) :
+        MaterialPin(node, name)
+    { }
+
+
     // Material node implementations.
     Material & MaterialNode::getMaterial() const
     {
@@ -43,6 +91,24 @@ namespace Flare
     MaterialNode::~MaterialNode()
     { }
 
+    // Material vec4 node base implementations.
+    MaterialVec4NodeBase::~MaterialVec4NodeBase()
+    { }
+
+    MaterialVec4NodeBase::MaterialVec4NodeBase(Material & material) :
+        MaterialNode(material)
+    { }
+
+
+    // Material mult vec4-vec4 base implementations.
+    MaterialMultVec4Vec4NodeBase::~MaterialMultVec4Vec4NodeBase()
+    { }
+
+    MaterialMultVec4Vec4NodeBase::MaterialMultVec4Vec4NodeBase(Material & material) :
+        MaterialNode(material)
+    {
+
+    }
 
     // Material output node base implementations.
     MaterialOutputNodeBase::MaterialOutputNodeBase(Material & material) :
@@ -84,21 +150,21 @@ namespace Flare
     {
         for (const auto outputNode : outputNodes)
         {
-            traverseNode(*outputNode);
+            traverseNode(outputNode);
         }
 
     }
 
-    void MaterialGlslGenerator::traverseNode(const MaterialNode & node)
+    void MaterialGlslGenerator::traverseNode(const MaterialNode * node)
     {
-        switch (node.getType())
+        switch (node->getType())
         {
-            case MaterialNodeType::Scalar:          traverseNodeType<MaterialNodeType::Scalar>(node);           break;
-            case MaterialNodeType::Vec4:            traverseNodeType<MaterialNodeType::Vec4>(node);             break;
-            case MaterialNodeType::Output:          traverseNodeType<MaterialNodeType::Output>(node);           break;
-            case MaterialNodeType::MultVec4Vec4:    traverseNodeType<MaterialNodeType::MultVec4Vec4>(node);     break;
-            case MaterialNodeType::MultVec4Scalar:  traverseNodeType<MaterialNodeType::MultVec4Scalar>(node);   break;
-            default:                                throw std::runtime_error("Unknown material node type.");     break;
+            case MaterialNodeType::Scalar:          traverseDeclaration<MaterialNodeType::Scalar>(node);        break;
+            case MaterialNodeType::Vec4:            traverseDeclaration<MaterialNodeType::Vec4>(node);          break;
+            case MaterialNodeType::Output:          traverseOutput<MaterialNodeType::Output>(node);             break;
+            case MaterialNodeType::MultVec4Vec4:    traverseOperator<MaterialNodeType::MultVec4Vec4>(node);     break;
+            case MaterialNodeType::MultVec4Scalar:  traverseOperator<MaterialNodeType::MultVec4Scalar>(node);   break;
+            default:                                throw std::runtime_error("Unknown material node type.");    break;
         }
     }
 
@@ -202,11 +268,11 @@ namespace Flare
         break;
         case MaterialNodeType::Scalar:
         {
-            std::cout << std::string(level * 3, ' ') << "Vec4 node: (";
+           /* std::cout << std::string(level * 3, ' ') << "Vec4 node: (";
 
             MaterialScalarNode<float> * pCastedNode = static_cast<MaterialScalarNode<float>*>(pNode);
 
-            std::cout << pCastedNode->getInput().getValue() << ")" << std::endl;
+            std::cout << pCastedNode->getInput().getValue() << ")" << std::endl;*/
         }
         break;
         case MaterialNodeType::Vec4:
@@ -243,7 +309,7 @@ namespace Flare
         break;
         case MaterialNodeType::MultVec4Scalar:
         {
-            std::cout << std::string(level * 3, ' ') << "MultVec4Scalar node: " << std::endl;
+            /*std::cout << std::string(level * 3, ' ') << "MultVec4Scalar node: " << std::endl;
 
             MaterialMultVec4ScalarNode<float> * pCastedNode = static_cast<MaterialMultVec4ScalarNode<float>*>(pNode);
 
@@ -258,7 +324,7 @@ namespace Flare
             {
                 std::cout << std::string((level + 1) * 3, ' ') << "Input B: ";
                 _debugPrintInput(&connectionB->getNode(), level + 1);
-            }
+            }*/
         }
         break;
         default:
